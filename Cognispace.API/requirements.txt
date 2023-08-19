@@ -1,0 +1,11 @@
+fastapi>=0.68.0,<0.69.0
+python-dotenv
+csv
+transformers
+accelerate
+einops
+langchain
+xformers
+bitsandbytes
+faiss-gpu
+sentence_transformers
