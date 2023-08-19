@@ -2,13 +2,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Inter:wght@600&display=swap');
 
 *{
+    font-family: 'Inter', sans-serif;
     padding: 0%;
     margin: 0%;
     overflow-x: hidden;
-    font-family: 'Inter', sans-serif;
-    background-color: #FF3D00;
+
 }
-.row{
+
+.main{
+    height: 700px;
     background-color: #FF3D00;
 }
 .logo{

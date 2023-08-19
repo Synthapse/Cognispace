@@ -3,6 +3,23 @@ import csv
 
 app = FastAPI()
 
+origins = [
+    "http://localhost",
+    "http://localhost:8000",
+    "http://localhost:3000",
+    "https://storage.googleapis.com",
+    "https://storage.googleapis.com/cognispace",
+    "https://storage.googleapis.com/cognispace/index.html"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/allRecipes")
 async def root():
