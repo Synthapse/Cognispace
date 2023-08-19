@@ -9,7 +9,7 @@ on:
 env:
   API_URL: ""
   Domain: 'Cognispace.io'
-  BUCKET: 'Cognispace'
+  BUCKET: 'cognispace'
   ENVIRONMENT: true
 
 jobs:
