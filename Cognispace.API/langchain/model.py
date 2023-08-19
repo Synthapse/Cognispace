@@ -12,7 +12,8 @@ bnb_config = transformers.BitsAndBytesConfig(
     bnb_4bit_compute_dtype=torch.bfloat16
 )
 
-model_id = 'meta-llama/Llama-2-7b'
+model_id = 'meta-llama/Llama-2-7b-chat-hf'
+#model_id = 'togethercomputer/LLaMA-2-7B-32K'
 
 # begin initializing HF items, need auth token for these
 write_hf_auth = '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'
@@ -23,6 +24,8 @@ model_config = transformers.AutoConfig.from_pretrained(
     use_auth_token=read_hf_auth
 )
 
+print(model_config)
+
 # initialize the model
 model = transformers.AutoModelForCausalLM.from_pretrained(
     model_id,
@@ -32,4 +35,7 @@ model = transformers.AutoModelForCausalLM.from_pretrained(
     device_map='auto',
     use_auth_token=read_hf_auth
 )
+
+print(model)
+
 model.eval()
