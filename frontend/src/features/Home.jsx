@@ -3,7 +3,7 @@ import '../style/Home.css';
 
 const Home = () => {
   return (
-    <div className="container-fluide">
+    <div className="container-fluide main">
       <div className="row">
         <div className="col-md-7">
           <div className="row logo">
