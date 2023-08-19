@@ -1,12 +1,12 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Home from './features/Home';
 
 function App() {
   return (
     <div className="App">
-      <h1>Food tastes better together</h1>
-      <p>Autonomous agent for generate recipes</p>
+      <Home/>
     </div>
   );
 }
