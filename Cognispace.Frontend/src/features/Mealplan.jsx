@@ -4,7 +4,7 @@ import '../style/Meatplan.css'
 //**React icons */
 import {CgSearch} from 'react-icons/cg'
 
-const Meatplan = () => {
+const Mealplan = () => {
   return (
     <>
     <div className='p-4 m-1'>
@@ -32,4 +32,4 @@ const Meatplan = () => {
   )
 }
 
-export default Meatplan
+export default Mealplan
