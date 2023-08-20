@@ -6,7 +6,7 @@ import axios from 'axios';
 import '../style/Meal.css';
 import useFetch from '../hooks/useFetch';
 
-interface IRecipe {
+export interface IRecipe {
   name: string;
   id: number;
   minutes: string;
