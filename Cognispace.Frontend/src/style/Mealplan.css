@@ -113,3 +113,8 @@ ul li {
   color: #282828;
 
 }
+
+.line {
+  text-decoration: line-through;
+  color: #cacaca;
+}

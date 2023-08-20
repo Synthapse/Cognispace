@@ -13,26 +13,32 @@ const meals = [
   {
     id: 1,
     name: 'Breakfast',
+    time: 8,
   },
   {
     id: 2,
     name: 'Brunch',
+    time: 11,
   },
   {
     id: 3,
     name: 'Dinner',
+    time: 14,
   },
   {
     id: 4,
     name: 'Dessert',
+    time: 15,
   },
   {
     id: 4,
     name: 'Supper',
+    time: 18,
   },
   {
     id: 5,
     name: 'Drinks',
+    time: 24,
   }
 ]
 
@@ -99,6 +105,13 @@ const Mealplan = () => {
     navigate('/profile');
   }
 
+  const currentDateTime = new Date();
+  const targetTime = new Date();
+
+  const isAfter = (hour: number) => {
+    return targetTime.setHours(hour, 0, 0, 0) < currentDateTime.getTime()
+  }
+
   return (
     <>
       <div className="navbar">
@@ -152,7 +165,7 @@ const Mealplan = () => {
 
         <ul className="list-unstyled mt-5">
           {meals.map((meal) => (
-            <li onClick={() => navigateToMeal(meal.name)} key={meal.id}>{meal.name}</li>
+            <li className={isAfter(meal.time) ? 'line' : ''} onClick={() => navigateToMeal(meal.name)} key={meal.id}>{meal.name}</li>
           ))}
         </ul>
       </div>
