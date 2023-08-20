@@ -1,35 +1,105 @@
-import React from 'react'
-import '../style/Meatplan.css'
+import React, { useState, useRef } from 'react';
+import { CgSearch } from 'react-icons/cg';
+import axios from 'axios';
 
-//**React icons */
-import {CgSearch} from 'react-icons/cg'
+import '../style/Meatplan.css';
 
 const Mealplan = () => {
+  const [expanded, setExpanded] = useState(false);
+  const searchInputRef = useRef(null);
+
+  const [ingredient, setIngredient] = useState('');
+  const [recipeName, setRecipeName] = useState('');
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const toggleSearch = () => {
+    setExpanded(!expanded);
+    if (!expanded) {
+      setTimeout(() => {
+        searchInputRef.current.focus();
+      }, 0);
+    }
+  };
+
+  const searchRecipes = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const queryParams = [];
+      if (ingredient) {
+        queryParams.push(`ingredient=${ingredient}`);
+      }
+      if (recipeName) {
+        queryParams.push(`recipe_name=${recipeName}`);
+      }
+
+      const queryString = queryParams.join('&');
+      const response = await axios.get(`http://localhost:8000/recipes?${queryString}`);
+      setRecipes(response.data.recipes);
+    } catch (error) {
+      setError('Error fetching recipes');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
-    <div className='p-4 m-1'>
-        <CgSearch size={40}/>
-    </div>
-    <div className='container'>
-        
-      
-      <div className="head d-flex mb-3">
-        <div className='section-1'>Today</div>
-        <div className='ms-5 section-2'>Tomorrow</div>
+      <div className={`search-container mt-3 ${expanded ? 'expanded' : ''}`}>
+        <div className="search-icon">
+          <CgSearch size={23} />
+        </div>
+        <input
+          type="text"
+          className="search-input"
+          style={{ width: expanded ? '150px' : '0' }}
+          onBlur={() => {
+            if (!searchInputRef.current.value.trim()) {
+              setExpanded(false);
+            }
+          }}
+          ref={searchInputRef}
+          placeholder="Recipes"
+          value={expanded ? ingredient : ''}
+          onChange={(e) => setIngredient(e.target.value)}
+          onClick={toggleSearch}
+        />
+
+        {expanded && (
+          <button className="search-button btn" size={200} onClick={searchRecipes}>
+            Search
+          </button>
+        )}
+         {loading && <p className="loading-message">Loading...</p>}
+    {error && <p className="error-message">Error: {error}</p>}
+        {recipes.length > 0 && (
+          <ul className="search-results">
+            {recipes.map((recipe) => (
+              <li key={recipe.id}>{recipe.name}</li>
+            ))}
+          </ul>
+        )}
       </div>
-
-        <ul className='list-unstyled mt-5'>
-            <li>Breakfast</li>
-            <li>Brunch</li>
-            <li>Dinner</li>
-            <li>Desert</li>
-            <li>Supper</li>
-            <li>Drinks</li>
+      <div className="container">
+        <div className="head d-flex mb-3">
+          <div className="section-1">Today</div>
+          <div className="ms-5 section-2">Tomorrow</div>
+        </div>
+        
+        <ul className="list-unstyled mt-5">
+          <li>Breakfast</li>
+          <li>Brunch</li>
+          <li>Dinner</li>
+          <li>Desert</li>
+          <li>Supper</li>
+          <li>Drinks</li>
         </ul>
-
-    </div>
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default Mealplan
+export default Mealplan;
