@@ -1,8 +1,37 @@
 import React, { useState, useRef } from 'react';
 import { CgSearch } from 'react-icons/cg';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-import '../style/Meatplan.css';
+import '../style/Mealplan.css';
+
+
+const meals = [
+  {
+    id: 1,
+    name: 'Breakfast',
+  },
+  {
+    id: 2,
+    name: 'Brunch',
+  },
+  {
+    id: 3,
+    name: 'Dinner',
+  },
+  {
+    id: 4,
+    name: 'Dessert',
+  },
+  {
+    id: 4,
+    name: 'Supper',
+  },
+  {
+    id: 5,
+    name: 'Drinks',
+  }
+]
 
 const Mealplan = () => {
   const [expanded, setExpanded] = useState(false);
@@ -46,6 +75,13 @@ const Mealplan = () => {
     }
   };
 
+  const navigate = useNavigate();
+
+
+  const navigateToMeal = (meal) => {
+    navigate('/meal', { state: { meal: meal } })
+  };
+
   return (
     <>
       <div className={`search-container mt-3 ${expanded ? 'expanded' : ''}`}>
@@ -73,8 +109,8 @@ const Mealplan = () => {
             Search
           </button>
         )}
-         {loading && <p className="loading-message">Loading...</p>}
-    {error && <p className="error-message">Error: {error}</p>}
+        {loading && <p className="loading-message">Loading...</p>}
+        {error && <p className="error-message">Error: {error}</p>}
         {recipes.length > 0 && (
           <ul className="search-results">
             {recipes.map((recipe) => (
@@ -88,14 +124,11 @@ const Mealplan = () => {
           <div className="section-1">Today</div>
           <div className="ms-5 section-2">Tomorrow</div>
         </div>
-        
+
         <ul className="list-unstyled mt-5">
-          <li>Breakfast</li>
-          <li>Brunch</li>
-          <li>Dinner</li>
-          <li>Desert</li>
-          <li>Supper</li>
-          <li>Drinks</li>
+          {meals.map((meal) => (
+            <li onClick={() => navigateToMeal(meal.name)} key={meal.id}>{meal.name}</li>
+          ))}
         </ul>
       </div>
     </>

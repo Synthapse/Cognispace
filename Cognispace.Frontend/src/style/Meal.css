@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Inter:wght@700&display=swap');
+
+
+.recipe-container {
+
+  padding: 20px;
+  color: #282828;
+
+  >h2 {
+    font-size: 2rem;
+    font-weight: bolder;
+    margin-bottom: 1rem;
+  }
+}
