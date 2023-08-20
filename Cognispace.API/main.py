@@ -152,5 +152,5 @@ async def get_recipes_by_criteria(
 
 @app.get("/llama")
 def chat_with_llama(human_input):
-    test = LlamaAgent.generate(human_input)
-    return test
+    modelResponse = LlamaAgent.generate(human_input)
+    return {"data": modelResponse}
