@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from AI.cooking_agents import LlamaAgent
 import csv
 
 app = FastAPI()
@@ -93,3 +94,8 @@ async def get_recipes_by_criteria(
         raise HTTPException(status_code=404, detail="No recipes found with the provided criteria.")
     
     return {"recipes": matching_rows}
+
+@app.get("/llama")
+def chat_with_llama(human_input):
+    test = LlamaAgent.generate(human_input)
+    return test
