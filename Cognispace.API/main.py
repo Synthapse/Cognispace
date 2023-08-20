@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from AI.cooking_agents import LlamaAgent
 import csv
+import ast
 
 app = FastAPI()
 
@@ -40,6 +41,60 @@ async def root():
     
     # Return the list of rows as a JSON response
     return {"data": rows}
+
+@app.get("/recipesByMeal")
+async def get_recipes_by_meal(meal):
+    INGREDIENT_COLUMN_INDEX = 10
+    RECIPE_NAME_COLUMN_INDEX = 0
+    
+    # Open the CSV file in read mode
+    with open('data/RAW_recipes.csv', 'r') as csvfile:
+        # Create a CSV reader object
+        csvreader = csv.reader(csvfile)
+        
+        # Get the header row
+        header = next(csvreader)
+        
+        # Get the indices for the requested properties
+        indices = {
+            "name": RECIPE_NAME_COLUMN_INDEX,
+            "id": 1,
+            "minutes": 2,
+            "contributor_id": 3,
+            "submitted": 4,
+            "tags": 5,
+            "nutrition": 6,
+            "n_steps": 7,
+            "steps": 8,
+            "description": 9,
+            "ingredients": 10,
+            "n_ingredients": 11
+        }
+        
+        # Create a list to store matching rows
+        matching_rows = []
+        
+        # Loop through each row in the CSV file
+        for row in csvreader:
+            row_ingredient = row[INGREDIENT_COLUMN_INDEX].lower() if INGREDIENT_COLUMN_INDEX < len(row) else ""
+            row_recipe_name = row[RECIPE_NAME_COLUMN_INDEX].lower() if RECIPE_NAME_COLUMN_INDEX < len(row) else ""
+            
+            if meal.lower() in row_recipe_name:  # Check if meal is in recipe name     
+
+                row = {property_name: row[index] for property_name, index in indices.items()}
+                row["tags"] = ast.literal_eval(row["tags"])
+                row["ingredients"] = ast.literal_eval(row["ingredients"])
+                row["nutrition"] = ast.literal_eval(row["nutrition"])
+                row["steps"] = ast.literal_eval(row["steps"])
+
+                matching_rows.append(row)
+                if len(matching_rows) >= 100:  # Break when 100 rows are found
+                    break
+         
+    if not matching_rows:
+        raise HTTPException(status_code=404, detail="No recipes found with the provided criteria.")
+    
+    return {"data": matching_rows}
 
 
 # To search by ingredient: http://localhost:8000/recipes?ingredient=chicken

@@ -1,7 +1,7 @@
 /* Fonts Import */
 @import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Inter:wght@600&display=swap');
 
-*{
+* {
     font-family: 'Inter', sans-serif;
     padding: 0%;
     margin: 0%;
@@ -9,26 +9,42 @@
 
 }
 
-.main{
-    height: 700px;
+.main {
+    height: 100vh;
     background-color: #FF3D00;
 }
-.logo{
+
+.container {
+    padding-left: 70px;
+}
+
+.logo {
     font-size: 24px;
     font-weight: 800;
-    color:#fff ;
+    color: #fff;
     padding-top: 29px;
     padding-left: 80px;
     margin-bottom: 300px;
 }
-.middle-text{
-    padding-left: 70px;
-}
-.title-one{
+
+.title-one {
     font-size: 50px;
     font-weight: 700;
-    color:#fff ;
+    color: #fff;
 }
-.links{
+
+.text-light {
+    color: #fff;
+}
+
+.links {
     font-size: 35px;
+}
+
+a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 600;
+    margin-right: 60px;
 }
