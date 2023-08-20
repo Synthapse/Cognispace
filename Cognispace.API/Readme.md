@@ -1,6 +1,6 @@
 uvicorn main:app --reload
-
-
+or
+python -m uvicorn main:app  --reload
 
 LangChain + LLama2
 

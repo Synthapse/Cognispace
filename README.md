@@ -1,31 +1,15 @@
 # Cognispace
 Project for autonomous agents. 
 
+Using: Llama-2 7B, LangChain, HuggingFace, FastAPI, Pydantic, Docker and more.
 
-https://app.superagi.com/
+_____
 
 Platform for creating agents (random generated agents):
 
 - Mood-Based Recipe Generator:
 
 This agent could generate recipes based on the user's mood or emotions. Users could input how they're feeling, and the agent would suggest recipes that match their mood, such as comfort foods for a bad day or energizing dishes for a productive day.
-
-- Social Recipe Sharing Agent:
-
-This agent could facilitate the sharing of recipes and cooking experiences among users. It could recommend recipes based on users' cooking history and allow them to rate and review recipes they've tried.
-
-- Recipe Recommender Agent:
-
-This agent could analyze users' preferences, dietary restrictions, and available ingredients to recommend personalized recipes. It could use a combination of user input and machine learning techniques to suggest dishes that match users' tastes and the ingredients they have on hand.
-
-- Historical Recipe Restorer:
-
-This agent could recreate recipes from historical periods and cultures. Users could input a specific time period, and the agent would adapt historical recipes for modern kitchens while preserving their authenticity.
-
-- AI Pastry Chef:
-
-Focused specifically on baking and desserts, this agent could develop intricate pastry recipes, provide guidance on complex techniques, and even generate 3D models of finished desserts.
-
 
 ______
 

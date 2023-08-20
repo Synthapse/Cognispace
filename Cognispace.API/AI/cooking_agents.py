@@ -14,7 +14,7 @@ class LlamaAgent:
         # Make sure the model path is correct for your system!
         llm = LlamaCpp(
             model_path="AI/Llama2/llama7B-2.bin",
-            temperature=0.75,
+            temperature=0.25,
             max_tokens=2000,
             top_p=1,
             callback_manager=callback_manager,
