@@ -261,7 +261,7 @@ const Mealplan = () => {
         <div className="user-profile">
         {!user ? (
         <div className="sign-up" onClick={() => signInWithGoogle()} style={{ display: "flex" }}>
-          <FcGoogle /> <p>Sign up</p>
+           <p>Sign up<FcGoogle /></p>
         </div>
       )  : (
             <div className="user-info" onClick={() => navigateToProfile()}>
