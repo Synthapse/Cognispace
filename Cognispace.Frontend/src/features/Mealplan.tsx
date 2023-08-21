@@ -1,13 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef,useEffect } from "react";
 import { CgSearch } from "react-icons/cg";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup,signOut } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
 import { auth, googleProvider } from "../auth/firebase";
 import "../style/Mealplan.css";
 import { IRecipe } from "./Meal";
 import { BsSearch, BsFilter } from "react-icons/bs";
+import { onAuthStateChanged } from "firebase/auth";
 
 const meals = [
   {
@@ -53,10 +54,11 @@ const Mealplan = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [showFilters, setShowFilters] = useState(false);
-  const [priceFilter, setPriceFilter] = useState(""); // Add more states for other filters
+  const [priceFilter, setPriceFilter] = useState(""); 
   const [compatibilityFilter, setCompatibilityFilter] = useState("");
   const [ingredientsFilter, setIngredientsFilter] = useState("");
   const [filterOptionsVisible, setFilterOptionsVisible] = useState(false);
+  const [user, setUser] = useState(auth.currentUser);
 
   const toggleSearch = () => {
     setExpanded(!expanded);
@@ -156,6 +158,24 @@ const Mealplan = () => {
     }
   };
 
+
+  // Listen for changes in authentication state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user:any) => {
+      setUser(user);
+    });
+
+    return () => unsubscribe();
+  }, []);
+ 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
   return (
     <>
       <div className="navbar">
@@ -238,27 +258,37 @@ const Mealplan = () => {
           )}
         </div>
 
-        {!auth?.currentUser?.email ? (
-          <div
-            className="sign-up"
-            onClick={() => signInWithGoogle()}
-            style={{ display: "flex" }}
-          >
-            <FcGoogle /> <p>Sign up</p>
-          </div>
-        ) : (
-          <div onClick={() => navigateToProfile()}>
-            {" "}
-            {auth?.currentUser?.photoURL ? (
-              <img
-                style={{ borderRadius: "50%", width: "24px", height: "24px" }}
-                src={auth?.currentUser?.photoURL ?? ""}
-              />
-            ) : (
-              <p>{auth?.currentUser?.email}</p>
-            )}
-          </div>
-        )}
+        <div className="user-profile">
+        {!user ? (
+        <div className="sign-up" onClick={() => signInWithGoogle()} style={{ display: "flex" }}>
+          <FcGoogle /> <p>Sign up</p>
+        </div>
+      )  : (
+            <div className="user-info" onClick={() => navigateToProfile()}>
+              <div className="user-image">
+                {auth?.currentUser?.photoURL ? (
+                  <img
+                    src={auth?.currentUser?.photoURL ?? ""}
+                    alt="User Profile"
+                  />
+                ) : (
+                  <div className="default-user-image">
+                    <p>{auth?.currentUser?.email?.charAt(0).toUpperCase()}</p>
+                  </div>
+                )}
+              </div>
+              <div className="user-details">
+              <h5 className="user-name">{auth?.currentUser?.displayName}</h5>
+                <p className="user-email">{auth?.currentUser?.email}</p>
+                <button className="logout-button" onClick={handleLogout}>
+                Logout
+              </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        
       </div>
       <div className="container">
         <div className="days-navigation">
