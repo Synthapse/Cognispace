@@ -1,59 +1,66 @@
-import React, { useState, useRef } from 'react';
-import { CgSearch } from 'react-icons/cg';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useRef } from "react";
+import { CgSearch } from "react-icons/cg";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { signInWithPopup } from "firebase/auth";
-import { FcGoogle } from 'react-icons/fc';
+import { FcGoogle } from "react-icons/fc";
 import { auth, googleProvider } from "../auth/firebase";
-import '../style/Mealplan.css';
-import { IRecipe } from './Meal';
-
+import "../style/Mealplan.css";
+import { IRecipe } from "./Meal";
+import { BsSearch, BsFilter } from "react-icons/bs";
 
 const meals = [
   {
     id: 1,
-    name: 'Breakfast',
+    name: "Breakfast",
     time: 8,
   },
   {
     id: 2,
-    name: 'Brunch',
+    name: "Brunch",
     time: 11,
   },
   {
     id: 3,
-    name: 'Dinner',
+    name: "Dinner",
     time: 14,
   },
   {
     id: 4,
-    name: 'Dessert',
+    name: "Dessert",
     time: 15,
   },
   {
     id: 4,
-    name: 'Supper',
+    name: "Supper",
     time: 18,
   },
   {
     id: 5,
-    name: 'Drinks',
+    name: "Drinks",
     time: 24,
-  }
-]
+  },
+];
 
 const Mealplan = () => {
   const [expanded, setExpanded] = useState(false);
   const searchInputRef = useRef(null);
 
-  const [ingredient, setIngredient] = useState('');
-  const [recipeName, setRecipeName] = useState('');
+  const [ingredient, setIngredient] = useState("");
+  const [recipeName, setRecipeName] = useState("");
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [showFilters, setShowFilters] = useState(false);
+  const [priceFilter, setPriceFilter] = useState(""); // Add more states for other filters
+  const [compatibilityFilter, setCompatibilityFilter] = useState("");
+  const [ingredientsFilter, setIngredientsFilter] = useState("");
+  const [filterOptionsVisible, setFilterOptionsVisible] = useState(false);
+
   const toggleSearch = () => {
     setExpanded(!expanded);
+    setShowFilters(!showFilters);
     if (!expanded) {
       setTimeout(() => {
         // @ts-ignore
@@ -75,11 +82,14 @@ const Mealplan = () => {
         queryParams.push(`recipe_name=${recipeName}`);
       }
 
-      const queryString = queryParams.join('&');
-      const response = await axios.get(`http://localhost:8000/recipes?${queryString}`);
+      const queryString = queryParams.join("&");
+      const response = await axios.get(
+        `http://localhost:8000/recipes?${queryString}`
+      );
       setRecipes(response.data.recipes);
+      console.log(response);
     } catch (error) {
-      setError('Error fetching recipes');
+      setError("Error fetching recipes");
     } finally {
       setLoading(false);
     }
@@ -87,9 +97,8 @@ const Mealplan = () => {
 
   const navigate = useNavigate();
 
-
   const navigateToMeal = (meal: string) => {
-    navigate('/meal', { state: { meal: meal } })
+    navigate("/meal", { state: { meal: meal } });
   };
 
   const signInWithGoogle = async () => {
@@ -102,27 +111,62 @@ const Mealplan = () => {
   };
 
   const navigateToProfile = () => {
-    navigate('/profile');
-  }
+    navigate("/profile");
+  };
 
   const currentDateTime = new Date();
   const targetTime = new Date();
 
   const isAfter = (hour: number) => {
-    return targetTime.setHours(hour, 0, 0, 0) < currentDateTime.getTime()
-  }
+    return targetTime.setHours(hour, 0, 0, 0) < currentDateTime.getTime();
+  };
+
+  const applyFilters = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const queryParams = [];
+      if (ingredient) {
+        queryParams.push(`ingredient=${ingredient}`);
+      }
+      if (recipeName) {
+        queryParams.push(`recipe_name=${recipeName}`);
+      }
+      if (priceFilter) {
+        queryParams.push(`price=${priceFilter}`);
+      }
+      if (compatibilityFilter) {
+        queryParams.push(`compatibility=${compatibilityFilter}`);
+      }
+      if (ingredientsFilter) {
+        queryParams.push(`ingredients=${ingredientsFilter}`);
+      }
+
+      const queryString = queryParams.join("&");
+      const response = await axios.get(
+        `http://localhost:8000/recipes?${queryString}`
+      );
+      setRecipes(response.data.recipes);
+      console.log(response);
+    } catch (error) {
+      setError("Error fetching recipes");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
       <div className="navbar">
-        <div className={`search-container mt-3 ${expanded ? 'expanded' : ''}`}>
+        <div className={`search-container mt-3 ${expanded ? "expanded" : ""}`}>
           <div className="search-icon">
             <CgSearch size={23} />
           </div>
           <input
             type="text"
             className="search-input"
-            style={{ width: expanded ? '150px' : '0' }}
+            style={{ width: expanded ? "150px" : "0" }}
             onBlur={() => {
               // @ts-ignore
               if (!searchInputRef?.current?.value.trim()) {
@@ -131,14 +175,17 @@ const Mealplan = () => {
             }}
             ref={searchInputRef}
             placeholder="Recipes"
-            value={expanded ? ingredient : ''}
+            value={expanded ? ingredient : ""}
             onChange={(e) => setIngredient(e.target.value)}
             onClick={toggleSearch}
           />
 
           {expanded && (
             // @ts-ignore
-            <button className="search-button btn" size={200} onClick={searchRecipes}>
+            <button
+              className="search-button btn"
+              onClick={searchRecipes}
+            >
               Search
             </button>
           )}
@@ -151,11 +198,67 @@ const Mealplan = () => {
               ))}
             </ul>
           )}
+          <div
+            className={`filter-icon ${showFilters ? "active" : ""}`}
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            <BsFilter size={23} />
+          </div>
+
+          {showFilters && (
+            <div
+              className={`filter-options ${showFilters ? "show-filters" : ""}`}
+            >
+              {/* Price filter */}
+              <input
+                type="text"
+                placeholder="Price"
+                value={priceFilter}
+                onChange={(e) => setPriceFilter(e.target.value)}
+              />
+              {/* Compatibility filter */}
+              <input
+                type="text"
+                placeholder="Compatibility"
+                value={compatibilityFilter}
+                onChange={(e) => setCompatibilityFilter(e.target.value)}
+              />
+              {/* Ingredients filter */}
+              <input
+                type="text"
+                placeholder="Ingredients"
+                value={ingredientsFilter}
+                onChange={(e) => setIngredientsFilter(e.target.value)}
+              />
+              {/* Add filter button */}
+              <button className="apply-filters-btn" onClick={applyFilters}>
+                Apply Filters
+              </button>
+            </div>
+          )}
         </div>
-        {!auth?.currentUser?.email ?
-          <div className="sign-up" onClick={() => signInWithGoogle()} style={{ display: 'flex' }}><FcGoogle /> <p>Sign up</p></div>
-          : <div onClick={() => navigateToProfile()}> {auth?.currentUser?.photoURL ? <img style={{ borderRadius: '50%', width: '24px', height: '24px' }} src={auth?.currentUser?.photoURL ?? ""} /> : <p>{auth?.currentUser?.email}</p>}</div>
-        }
+
+        {!auth?.currentUser?.email ? (
+          <div
+            className="sign-up"
+            onClick={() => signInWithGoogle()}
+            style={{ display: "flex" }}
+          >
+            <FcGoogle /> <p>Sign up</p>
+          </div>
+        ) : (
+          <div onClick={() => navigateToProfile()}>
+            {" "}
+            {auth?.currentUser?.photoURL ? (
+              <img
+                style={{ borderRadius: "50%", width: "24px", height: "24px" }}
+                src={auth?.currentUser?.photoURL ?? ""}
+              />
+            ) : (
+              <p>{auth?.currentUser?.email}</p>
+            )}
+          </div>
+        )}
       </div>
       <div className="container">
         <div className="days-navigation">
@@ -165,7 +268,13 @@ const Mealplan = () => {
 
         <ul className="list-unstyled mt-5">
           {meals.map((meal) => (
-            <li className={isAfter(meal.time) ? 'line' : ''} onClick={() => navigateToMeal(meal.name)} key={meal.id}>{meal.name}</li>
+            <li
+              className={isAfter(meal.time) ? "line" : ""}
+              onClick={() => navigateToMeal(meal.name)}
+              key={meal.id}
+            >
+              {meal.name}
+            </li>
           ))}
         </ul>
       </div>

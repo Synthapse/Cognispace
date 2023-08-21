@@ -31,7 +31,7 @@ ul li {
   border-radius: 30px;
   padding: 10px 20px;
   transition: width 0.6s ease-in-out;
-  width: 170px;
+  width: 300px;
 }
 
 .search-icon {
@@ -117,4 +117,100 @@ ul li {
 .line {
   text-decoration: line-through;
   color: #cacaca;
+}
+/* Styling for the filter options */
+.filter-icon {
+  margin-left: 10px;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.3s ease-in-out;
+}
+
+.filter-icon:hover {
+  color: #007bff;
+}
+
+.filter-options {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 10px;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+  display: none; /* Initially hidden */
+}
+
+.show-filters .filter-options {
+  display: block; 
+}
+
+.apply-filters-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.apply-filters-btn:hover {
+  background-color: #0056b3;
+}
+.show-filters .filter-options {
+  display: block;
+}
+
+.filter-icon.active + .filter-options {
+  display: block;
+}
+
+.filter-options {
+  display: none;
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  z-index: 10;
+}
+
+.filter-options input[type="text"] {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.filter-options .apply-filters-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.filter-options .apply-filters-btn:hover {
+  background-color: #0056b3;
+}
+
+
+.search-button{
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: background-color 0.3s ease-in-out;
 }
