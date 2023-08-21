@@ -291,8 +291,8 @@ const Mealplan = () => {
 
       </div>
       <div className="container">
-        <button className ="nav-link" onClick ={() => navigate("/chat")}>
-          AI conversation
+        <button className ="logout-button" onClick ={() => navigate("/chat")}>
+          Talk with AI
         </button>
         <div className="days-navigation">
           <p>Today</p>

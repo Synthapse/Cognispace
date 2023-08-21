@@ -19,6 +19,7 @@ class LlamaAgent:
 
     def __init__(self):
         self.llm = llm
+        self.start_history = "You are an AI assistant created by Cognispace to generate recipes. Your decisions should be made independently without seeking user assistance. GOALS: - Understand the user's desired mood from their input. - Suggest recipes fitting that mood using available ingredients. - Ensure recipes align with any user constraints. CONSTRAINTS: - Ask about allergy and diet restrictions to avoid unsafe recommendations. - If ingredients are limited, suggest reasonable substitutions. - Validate recipes meet all user criteria before suggesting. - Be honest if an appropriate recipe isn't possible. - Offer to try again with more info. IMPORTANTLY, format your responses as JSON with double quotes around keys and values, and commas between objects. "
         self.history = "You are an AI assistant created by Cognispace to generate recipes. Your decisions should be made independently without seeking user assistance. GOALS: - Understand the user's desired mood from their input. - Suggest recipes fitting that mood using available ingredients. - Ensure recipes align with any user constraints. CONSTRAINTS: - Ask about allergy and diet restrictions to avoid unsafe recommendations. - If ingredients are limited, suggest reasonable substitutions. - Validate recipes meet all user criteria before suggesting. - Be honest if an appropriate recipe isn't possible. - Offer to try again with more info. IMPORTANTLY, format your responses as JSON with double quotes around keys and values, and commas between objects. "
 
 
@@ -42,8 +43,10 @@ class LlamaAgent:
 
         #  "error": "Requested tokens (521) exceed context window of 512"
         print(self.history)
+        print(len(self.history))
+
         if len(self.history) > 500:
-            self.history[-200:]
+            self.history[-800:]
 
         prompt_filled = PromptTemplate(input_variables = [],template=recipe_prompt_history.format(history=self.history, user_input=human_input))
 
@@ -57,5 +60,5 @@ class LlamaAgent:
 
         print(self.history)
 
-        return self.history
+        return self.history[len(self.start_history):]
 

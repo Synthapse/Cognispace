@@ -35,7 +35,7 @@ ul li {
   display: flex;
   margin-left: 30px;
   align-items: center;
-  background-color: #f7f7f7;
+
   border-radius: 30px;
   padding: 10px 20px;
   transition: width 0.6s ease-in-out;
@@ -233,6 +233,8 @@ ul li {
 }
 
 .user-info {
+  padding-top:40px;
+  padding-right:40px;
   display: flex;
   align-items: center;
   cursor: pointer;
