@@ -1,8 +1,8 @@
-import React, { useState, useRef,useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { CgSearch } from "react-icons/cg";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { signInWithPopup,signOut } from "firebase/auth";
+import { signInWithPopup, signOut } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
 import { auth, googleProvider } from "../auth/firebase";
 import "../style/Mealplan.css";
@@ -54,7 +54,7 @@ const Mealplan = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [showFilters, setShowFilters] = useState(false);
-  const [priceFilter, setPriceFilter] = useState(""); 
+  const [priceFilter, setPriceFilter] = useState("");
   const [compatibilityFilter, setCompatibilityFilter] = useState("");
   const [ingredientsFilter, setIngredientsFilter] = useState("");
   const [filterOptionsVisible, setFilterOptionsVisible] = useState(false);
@@ -161,13 +161,13 @@ const Mealplan = () => {
 
   // Listen for changes in authentication state
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user:any) => {
+    const unsubscribe = onAuthStateChanged(auth, (user: any) => {
       setUser(user);
     });
 
     return () => unsubscribe();
   }, []);
- 
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -259,11 +259,11 @@ const Mealplan = () => {
         </div>
 
         <div className="user-profile">
-        {!user ? (
-        <div className="sign-up" onClick={() => signInWithGoogle()} style={{ display: "flex" }}>
-           <p>Sign up<FcGoogle /></p>
-        </div>
-      )  : (
+          {!user ? (
+            <div className="sign-up" onClick={() => signInWithGoogle()} style={{ display: "flex" }}>
+              <p>Sign up<FcGoogle /></p>
+            </div>
+          ) : (
             <div className="user-info" onClick={() => navigateToProfile()}>
               <div className="user-image">
                 {auth?.currentUser?.photoURL ? (
@@ -278,19 +278,22 @@ const Mealplan = () => {
                 )}
               </div>
               <div className="user-details">
-              <h5 className="user-name">{auth?.currentUser?.displayName}</h5>
+                <h5 className="user-name">{auth?.currentUser?.displayName}</h5>
                 <p className="user-email">{auth?.currentUser?.email}</p>
                 <button className="logout-button" onClick={handleLogout}>
-                Logout
-              </button>
+                  Logout
+                </button>
               </div>
             </div>
           )}
         </div>
 
-        
+
       </div>
       <div className="container">
+        <button className ="nav-link" onClick ={() => navigate("/chat")}>
+          AI conversation
+        </button>
         <div className="days-navigation">
           <p>Today</p>
           <div className="ms-5 section-2">Tomorrow</div>

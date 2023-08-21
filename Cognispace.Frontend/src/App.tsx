@@ -5,6 +5,7 @@ import Mealplan from './features/Mealplan';
 import Meal from './features/Meal';
 import { Profile } from './features/Profile';
 import Chat from './features/Chat';
+import FoodAgent from './features/FoodAgent';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/food" element={<FoodAgent />} />
           <Route path="/mealplan" element={<Mealplan />} />
           <Route path="/meal" element={<Meal />} />
           <Route path="/profile" element={<Profile />} />
