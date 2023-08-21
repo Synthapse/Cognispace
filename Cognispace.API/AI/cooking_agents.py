@@ -40,6 +40,11 @@ class LlamaAgent:
 
         print ("Start conversation with history...")
 
+        #  "error": "Requested tokens (521) exceed context window of 512"
+        print(self.history)
+        if len(self.history) > 500:
+            self.history[-200:]
+
         prompt_filled = PromptTemplate(input_variables = [],template=recipe_prompt_history.format(history=self.history, user_input=human_input))
 
         chain = LLMChain(
@@ -48,8 +53,6 @@ class LlamaAgent:
         )
 
         ai_response = chain.predict(user_input=prompt_filled)
-
-        print('Response', ai_response)
         self.history += f"\nHuman: {human_input}\nAI: {ai_response}"
 
         print(self.history)

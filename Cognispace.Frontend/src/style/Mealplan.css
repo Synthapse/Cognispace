@@ -19,6 +19,13 @@ body {
 ul li {
   font-size: 3rem;
   font-weight: bold;
+
+  &:hover {
+    color: #FFAB00;
+    cursor: pointer;
+    transition: 0.5s;
+}
+transition: 0.5s;
 }
 
 /* SearchBar.css */

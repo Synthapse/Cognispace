@@ -1,6 +1,7 @@
 import React from 'react';
 import '../style/Home.css';
 import { useNavigate } from 'react-router-dom';
+import heroImage from '../media/heroimage.svg';
 
 const Home = () => {
 
@@ -29,13 +30,14 @@ const Home = () => {
             </div>
             <div className="row mt-4 links">
               <div className="col">
-                <a onClick={() => navigateToPlanMeal()} className="text-light me-4">
+                <a onClick={() => navigateToPlanMeal()} className="text-light me-4 link">
                   <u>Meal plan</u>
                 </a>
               </div>
             </div>
           </div>
         </div>
+        <img className="hero-image" src={heroImage} />
       </div>
     </div>
   );

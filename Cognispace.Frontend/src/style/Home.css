@@ -47,4 +47,18 @@ a {
     font-size: 24px;
     font-weight: 600;
     margin-right: 60px;
+
+    &:hover {
+        color: #FFAB00;
+        cursor: pointer;
+        transition: 0.5s;
+    }
+    transition: 0.5s;
+}
+
+.hero-image {
+    position: absolute;
+    right: 0;
+    top: 0;
+    max-height: 100vh;
 }
