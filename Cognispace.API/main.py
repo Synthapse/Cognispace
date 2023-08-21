@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from AI.cooking_agents import LlamaAgent
 import csv
 import ast
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
@@ -23,6 +24,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Its one agent per entire application not one agent per user.
+agent_instance = LlamaAgent()
 
 @app.get("/allRecipes")
 async def root():
@@ -152,5 +155,17 @@ async def get_recipes_by_criteria(
 
 @app.get("/llama")
 def chat_with_llama(human_input):
-    modelResponse = LlamaAgent.generate(human_input)
-    return {"data": modelResponse}
+    try:
+        modelResponse = LlamaAgent.generate(human_input)
+        return {"data": modelResponse}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)  
+
+@app.get("/llama_conversation")
+def chat_with_llama_conversation(human_input):
+    try:
+        modelResponse = LlamaAgent.generate_conversations(agent_instance, human_input)
+        print(modelResponse)
+        return {"data": modelResponse}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)  

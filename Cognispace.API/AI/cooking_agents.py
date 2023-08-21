@@ -1,37 +1,58 @@
-from langchain import PromptTemplate, LLMChain
+from langchain import PromptTemplate, LLMChain, Prompt
+from AI.agents import recipe_prompt, recipe_prompt_history
 from langchain.llms import LlamaCpp
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
+callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
+llm = LlamaCpp(
+    model_path="AI/Llama2/llama7B-2.bin",
+    temperature=0.25,
+    max_tokens=2000,
+    top_p=1,
+    callback_manager=callback_manager,
+    verbose=True,
+    use_mlock=True,
+)
 
 class LlamaAgent:
 
+    def __init__(self):
+        self.llm = llm
+        self.history = "You are an AI assistant created by Cognispace to generate recipes. Your decisions should be made independently without seeking user assistance. GOALS: - Understand the user's desired mood from their input. - Suggest recipes fitting that mood using available ingredients. - Ensure recipes align with any user constraints. CONSTRAINTS: - Ask about allergy and diet restrictions to avoid unsafe recommendations. - If ingredients are limited, suggest reasonable substitutions. - Validate recipes meet all user criteria before suggesting. - Be honest if an appropriate recipe isn't possible. - Offer to try again with more info. IMPORTANTLY, format your responses as JSON with double quotes around keys and values, and commas between objects. "
+
+
     def generate(human_input):
-        callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
 
         print("Loading Llama model...")
 
-        # Make sure the model path is correct for your system!
-        llm = LlamaCpp(
-            model_path="AI/Llama2/llama7B-2.bin",
-            temperature=0.25,
-            max_tokens=2000,
-            top_p=1,
-            callback_manager=callback_manager,
-            verbose=True,
-            use_mlock=True,
+        prompt: PromptTemplate = recipe_prompt
+
+        chain = LLMChain(
+            llm=llm, 
+            prompt=prompt,
         )
 
-        print(llm)
+        response = chain.predict(user_input=human_input)
+        return response
+    
+    def generate_conversations(self, human_input):
 
-        template = """Mood-Based Recipe Generator.
-        This agent could generate recipes based on the user's mood or emotions.
-        Users could input how they're feeling, and the agent would suggest recipes that match their mood,
-        such as comfort foods for a bad day or energizing dishes for a productive day.
+        print ("Start conversation with history...")
 
-        {history}
-        Human: {human_input}
-        Assistant:"""
+        prompt_filled = PromptTemplate(input_variables = [],template=recipe_prompt_history.format(history=self.history, user_input=human_input))
 
-        llm(template)
-        return llm(template)
+        chain = LLMChain(
+            llm=llm, 
+            prompt=prompt_filled,
+        )
+
+        ai_response = chain.predict(user_input=prompt_filled)
+
+        print('Response', ai_response)
+        self.history += f"\nHuman: {human_input}\nAI: {ai_response}"
+
+        print(self.history)
+
+        return self.history
+
