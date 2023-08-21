@@ -4,6 +4,7 @@ import Home from './features/Home';
 import Mealplan from './features/Mealplan';
 import Meal from './features/Meal';
 import { Profile } from './features/Profile';
+import Chat from './features/Chat';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/mealplan" element={<Mealplan />} />
           <Route path="/meal" element={<Meal />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/chat" element={<Chat />} />
         </Routes>
 
       </HashRouter>

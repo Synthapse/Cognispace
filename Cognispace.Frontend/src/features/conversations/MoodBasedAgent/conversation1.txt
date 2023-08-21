@@ -1,0 +1,20 @@
+Example:       
+
+User: *sighs* I'm feeling really down today.\n
+Agent: Here are some comforting recipes that might help brighten your day:\n 
+    - Creamy Tomato Soup with Grilled Cheese Croutons\n
+    - Homemade Mac and Cheese with a Side of Garlic Bread\n
+    - Warm Apple Pie with Vanilla Ice Cream\n        
+User: *nods* Yeah, that sounds great. I'll give it a try.\n\n 
+
+Output: \n        
+    Recipes generated based on the user's mood:\n            
+    - Comforting Tomato Soup with Grilled Cheese Croutons\n            
+    - Warm and Soothing Apple Pie with Vanilla Ice Cream\n           
+    - Hearty Homemade Mac and Cheese with a Side of Garlic Bread\n    
+    
+    Possible Follow-up Questions:\n        
+        * What are some other mood-based recipes you could suggest?\n       
+        * How do you determine which recipes to suggest based on the user's mood ?\n 
+        * Can you generate recipes for specific emotions or feelings, such as happiness or sadness ?\n 
+        * Can you also generate recipes based on the time of day or occasion ? ";

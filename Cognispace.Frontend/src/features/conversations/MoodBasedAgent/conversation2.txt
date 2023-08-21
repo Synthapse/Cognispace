@@ -1,0 +1,25 @@
+1. Introduction\n        
+
+Welcome to the Mood-Based Recipe Generator! I'm here to help you find the perfect recipe based on your current mood or emotions.
+Please let me know how you're feeling, and I will suggest some delicious dishes that match your mood.\n
+
+2. Understanding User Input\n        
+Great, thank you for letting me know!\n
+Could you please tell me more about how you're feeling today?\n
+Are you having a good day or a bad day? Do you want something comforting or energizing?\n
+Any other details you can provide will help me give you the best recipe suggestions.\n
+
+3. Generating Recipes\n        
+Ah, I see! Based on what you've told me, I would recommend trying out this hearty beef stew for a bad day.\n
+It's rich in comforting flavors and will definitely hit the spot when you need something warm and fuzzy.\n
+Or if you're feeling energized and productive, how about this refreshing quinoa salad with veggies?\n
+It's light and healthy, perfect for a day when you want to power through your tasks.\n
+
+4. Providing Recipe Details\n
+Great! Here are the details of the recipe I've chosen for you:\n
+        * Name: Hearty Beef Stew\n        
+        * Ingredients: beef, vegetables, potatoes, etc.\n        
+        * Cooking Time: 1-2 hours\n        
+        * Serves: 4-6 people\n        
+        * Level of Difficulty: Medium\n        
+I hope you enjoy this recipe! Let me know if you have any questions or need further assistance.\n5. Offering Alternatives\n        I see, thank you for letting me know! If you're not in the mood for beef stew, here are some other options"
