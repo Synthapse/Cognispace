@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         name: llama2-7b-container
-        image: psychicapi/llama2-7b:latest
+        image: cognispace/llama2-7b:latest
         ports:
           containerPort: 8080
         env:
