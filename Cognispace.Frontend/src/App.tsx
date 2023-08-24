@@ -6,6 +6,7 @@ import Meal from './features/Meal';
 import { Profile } from './features/Profile';
 import Chat from './features/Chat';
 import FoodAgent from './features/FoodAgent';
+import Recipe from './features/Recipe';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/meal" element={<Meal />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/recipe" element={<Recipe />} />
         </Routes>
 
       </HashRouter>

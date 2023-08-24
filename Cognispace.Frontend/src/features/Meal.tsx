@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import '../style/Meal.css';
 import useFetch from '../hooks/useFetch';
+import { RecipeListItem } from './Mealplan';
 
 export interface IRecipe {
   name: string;
@@ -34,16 +35,7 @@ const Meal = () => {
       <h1>{location.state.meal}</h1>
       {data?.map((recipe: IRecipe) => {
         return (
-          <div className="recipe-container">
-            <h2>{recipe.name}</h2>
-            <p>{recipe.description}</p>
-            <br/>
-            {recipe.ingredients.map((y: string) => {
-              return (
-                <li>{y}</li>
-              )
-            })}
-          </div>
+          <RecipeListItem recipe={recipe} />
         )
       })}
     </div>

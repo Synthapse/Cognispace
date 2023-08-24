@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Inter:wght@700&display=swap');
 
+@import './designsystem.scss';
+
 body {
   background-color: rgb(255, 255, 255);
   font-family: 'Inter', sans-serif;
@@ -21,7 +23,7 @@ ul li {
   font-weight: bold;
 
   &:hover {
-    color: #FFAB00;
+    color: $secondaryColor;
     cursor: pointer;
     transition: 0.5s;
   }
@@ -76,7 +78,7 @@ ul li {
 }
 
 .search-icon:hover {
-  fill: #007bff;
+  fill: $primaryColor;
 }
 
 /* Styling for Loading and Error Messages */
@@ -140,18 +142,11 @@ ul li {
 }
 
 .filter-options {
-  background-color: #fff;
-  border: 1px solid #ddd;
   border-radius: 5px;
   padding: 10px;
   margin-top: 10px;
-  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
-  display: none;
-  /* Initially hidden */
-}
 
-.show-filters .filter-options {
-  display: block;
+  /* Initially hidden */
 }
 
 .apply-filters-btn {
@@ -170,52 +165,30 @@ ul li {
   background-color: #0056b3;
 }
 
-.show-filters .filter-options {
-  display: block;
+
+.search-filters {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
 }
 
-.filter-icon.active+.filter-options {
-  display: block;
-}
-
-.filter-options {
-  display: none;
-  position: absolute;
-  top: 30px;
-  left: 50%;
-  background-color: white;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  z-index: 10;
-}
 
 .filter-options input[type="text"] {
-  display: block;
-  width: 100%;
   padding: 8px;
   margin-bottom: 8px;
   border: 1px solid #ccc;
-  border-radius: 4px;
   font-size: 14px;
 }
 
-.filter-options .apply-filters-btn {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-}
+
 
 .filter-options .apply-filters-btn:hover {
-  background-color: #0056b3;
+  background-color: $primaryColor;
 }
 
 
 .search-button {
-  background-color: #007bff;
+  background-color: $primaryColor;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -233,8 +206,8 @@ ul li {
 }
 
 .user-info {
-  padding-top:40px;
-  padding-right:40px;
+  padding-top: 40px;
+  padding-right: 40px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -246,7 +219,7 @@ ul li {
   border-radius: 50%;
   overflow: hidden;
   margin-right: 15px;
-  border: 2px solid #007bff;
+  border: 2px solid $primaryColor;
   background-color: #fff;
   transition: border-color 0.3s ease-in-out;
 }
@@ -292,7 +265,7 @@ ul li {
 }
 
 .logout-button {
-  background-color: #007bff;
+  background-color: $primaryColor;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -306,4 +279,52 @@ ul li {
 .nav-link {
   color: black;
   margin-top: 40px;
+}
+
+.tags {
+  display: flex;
+
+  >* {
+    margin-right: 4px;
+  }
+}
+
+.tag {
+  background-color: $primaryColor;
+  min-width: fit-content;
+  font-size: 11px;
+  padding: 0 12px;
+  height: 22px;
+  line-height: 22px;
+  text-align: center;
+  color: white;
+  border-radius: 16px;
+
+  & :hover {
+    cursor: pointer;
+  }
+}
+
+.tag-active {
+  background-color: $primaryColorActive;
+}
+
+.recipe-list-item {
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.recipe-list-item-details {
+  font-size: 12px;
+  color: $text-gray-color;
+  margin: 14px 0;
+  display: flex;
+
+  >p {
+    margin-right: 12px;
+    text-align: center;
+  }
 }

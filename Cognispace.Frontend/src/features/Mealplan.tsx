@@ -5,10 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { signInWithPopup, signOut } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
 import { auth, googleProvider } from "../auth/firebase";
-import "../style/Mealplan.css";
+import "../style/Mealplan.scss";
 import { IRecipe } from "./Meal";
 import { BsSearch, BsFilter } from "react-icons/bs";
 import { onAuthStateChanged } from "firebase/auth";
+import config from "../config.json"
+import { BiTimer } from "react-icons/bi";
+import { PiBowlFood } from "react-icons/pi";
+import { BsBarChartSteps } from "react-icons/bs";
 
 const meals = [
   {
@@ -53,16 +57,16 @@ const Mealplan = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+
   const [showFilters, setShowFilters] = useState(false);
-  const [priceFilter, setPriceFilter] = useState("");
-  const [compatibilityFilter, setCompatibilityFilter] = useState("");
   const [ingredientsFilter, setIngredientsFilter] = useState("");
-  const [filterOptionsVisible, setFilterOptionsVisible] = useState(false);
+  const [tags, setTags] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
   const [user, setUser] = useState(auth.currentUser);
 
   const toggleSearch = () => {
     setExpanded(!expanded);
-    setShowFilters(!showFilters);
     if (!expanded) {
       setTimeout(() => {
         // @ts-ignore
@@ -86,9 +90,11 @@ const Mealplan = () => {
 
       const queryString = queryParams.join("&");
       const response = await axios.get(
-        `http://localhost:8000/recipes?${queryString}`
+        `${config.apps.CognispaceAPI.url}/recipes?${queryString}`
       );
       setRecipes(response.data.recipes);
+
+      setTags(Array.from(new Set(response.data.recipes.flatMap((x: { tags: string; }) => x.tags))))
       console.log(response);
     } catch (error) {
       setError("Error fetching recipes");
@@ -129,26 +135,20 @@ const Mealplan = () => {
       setError(null);
 
       const queryParams = [];
-      if (ingredient) {
-        queryParams.push(`ingredient=${ingredient}`);
-      }
+
       if (recipeName) {
         queryParams.push(`recipe_name=${recipeName}`);
       }
-      if (priceFilter) {
-        queryParams.push(`price=${priceFilter}`);
-      }
-      if (compatibilityFilter) {
-        queryParams.push(`compatibility=${compatibilityFilter}`);
-      }
+      //24.08 - find issue to make price & compatibility works
       if (ingredientsFilter) {
-        queryParams.push(`ingredients=${ingredientsFilter}`);
+        queryParams.push(`ingredient=${ingredientsFilter}`);
       }
 
       const queryString = queryParams.join("&");
       const response = await axios.get(
-        `http://localhost:8000/recipes?${queryString}`
+        `${config.apps.CognispaceAPI.url}/recipes?${queryString}`
       );
+      console.log(response.data.recipes);
       setRecipes(response.data.recipes);
       console.log(response);
     } catch (error) {
@@ -157,6 +157,20 @@ const Mealplan = () => {
       setLoading(false);
     }
   };
+
+  const selectTag = async (tag: string) => {
+
+    if (selectedTags.includes(tag)) {
+      setSelectedTags(selectedTags.filter(t => t !== tag));
+    }
+    else {
+      setSelectedTags([...selectedTags, tag])
+    }
+
+    setRecipes(recipes.filter((x: IRecipe) => x.tags.includes(tag)))
+
+  }
+
 
 
   // Listen for changes in authentication state
@@ -179,85 +193,53 @@ const Mealplan = () => {
   return (
     <>
       <div className="navbar">
-        <div className={`search-container mt-3 ${expanded ? "expanded" : ""}`}>
-          <div className="search-icon">
-            <CgSearch size={23} />
-          </div>
-          <input
-            type="text"
-            className="search-input"
-            style={{ width: expanded ? "150px" : "0" }}
-            onBlur={() => {
-              // @ts-ignore
-              if (!searchInputRef?.current?.value.trim()) {
-                setExpanded(false);
-              }
-            }}
-            ref={searchInputRef}
-            placeholder="Recipes"
-            value={expanded ? ingredient : ""}
-            onChange={(e) => setIngredient(e.target.value)}
-            onClick={toggleSearch}
-          />
-
-          {expanded && (
-            // @ts-ignore
-            <button
-              className="search-button btn"
-              onClick={searchRecipes}
-            >
-              Search
-            </button>
-          )}
-          {loading && <p className="loading-message">Loading...</p>}
-          {error && <p className="error-message">Error: {error}</p>}
-          {recipes.length > 0 && (
-            <ul className="search-results">
-              {recipes.map((recipe: IRecipe) => (
-                <li key={recipe.id}>{recipe.name}</li>
-              ))}
-            </ul>
-          )}
-          <div
-            className={`filter-icon ${showFilters ? "active" : ""}`}
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <BsFilter size={23} />
-          </div>
-
-          {showFilters && (
-            <div
-              className={`filter-options ${showFilters ? "show-filters" : ""}`}
-            >
-              {/* Price filter */}
-              <input
-                type="text"
-                placeholder="Price"
-                value={priceFilter}
-                onChange={(e) => setPriceFilter(e.target.value)}
-              />
-              {/* Compatibility filter */}
-              <input
-                type="text"
-                placeholder="Compatibility"
-                value={compatibilityFilter}
-                onChange={(e) => setCompatibilityFilter(e.target.value)}
-              />
-              {/* Ingredients filter */}
-              <input
-                type="text"
-                placeholder="Ingredients"
-                value={ingredientsFilter}
-                onChange={(e) => setIngredientsFilter(e.target.value)}
-              />
-              {/* Add filter button */}
-              <button className="apply-filters-btn" onClick={applyFilters}>
-                Apply Filters
-              </button>
+        <div className="search-filters">
+          <div className={`search-container mt-3 ${expanded ? "expanded" : ""}`}>
+            <div className="search-icon">
+              <CgSearch size={23} />
             </div>
-          )}
-        </div>
+            <input
+              type="text"
+              className="search-input"
+              style={{ width: expanded ? "150px" : "0" }}
+              onBlur={() => {
+                // @ts-ignore
+                if (!searchInputRef?.current?.value.trim()) {
+                  setExpanded(false);
+                }
+              }}
+              ref={searchInputRef}
+              placeholder="Recipes"
+              value={expanded ? ingredient : ""}
+              onChange={(e) => setIngredient(e.target.value)}
+              onClick={toggleSearch}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  toggleSearch();
+                  searchRecipes();
+                }
+              }}
+            />
 
+            {expanded && (
+              // @ts-ignore
+              <button
+                className="search-button btn"
+                onClick={searchRecipes}
+              >
+                Search
+              </button>
+            )}
+            <div
+              className={`filter-icon ${showFilters ? "active" : ""}`}
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              <BsFilter size={23} />
+            </div>
+            {loading && <p className="loading-message">Loading...</p>}
+            {error && <p className="error-message">Error: {error}</p>}
+          </div>
+        </div>
         <div className="user-profile">
           {!user ? (
             <div className="sign-up" onClick={() => signInWithGoogle()} style={{ display: "flex" }}>
@@ -287,32 +269,100 @@ const Mealplan = () => {
             </div>
           )}
         </div>
-
-
       </div>
-      <div className="container">
-        <button className ="logout-button" onClick ={() => navigate("/chat")}>
-          Talk with AI
-        </button>
-        <div className="days-navigation">
-          <p>Today</p>
-          <div className="ms-5 section-2">Tomorrow</div>
-        </div>
+      {showFilters && (
+        <>
+          <div className={`filter-options`}>
+            <h3>Tags:</h3>
+            <div className="tags">{tags.map((x: string) => <Tag onClick={() => selectTag(x)} text={x} isActive={selectedTags.includes(x)} />)}</div>
+            <h3>Ingredients:</h3>
+            <input
+              type="text"
+              placeholder="Ingredients"
+              value={ingredientsFilter}
+              onChange={(e) => setIngredientsFilter(e.target.value)}
+            />
+            {/* Add filter button */}
+            <button className="apply-filters-btn" onClick={applyFilters}>
+              Apply Filters
+            </button>
+          </div>
+        </>
+      )}
+      {recipes.length
 
-        <ul className="list-unstyled mt-5">
-          {meals.map((meal) => (
-            <li
-              className={isAfter(meal.time) ? "line" : ""}
-              onClick={() => navigateToMeal(meal.name)}
-              key={meal.id}
-            >
-              {meal.name}
-            </li>
-          ))}
-        </ul>
-      </div>
+        ?
+        recipes.length > 0 && (
+          <ul className="search-results">
+            {recipes.map((recipe: IRecipe) => (
+              <RecipeListItem recipe={recipe} />
+            ))}
+          </ul>
+        )
+        :
+        <>
+          <div className="container">
+            {/* <button className="logout-button" onClick={() => navigate("/chat")}>
+              Talk with AI
+            </button> */}
+            <div className="days-navigation">
+              <p>Today</p>
+              <div className="ms-5 section-2">Tomorrow</div>
+            </div>
+
+            <ul className="list-unstyled mt-5">
+              {meals.map((meal) => (
+                <li
+                  className={isAfter(meal.time) ? "line" : ""}
+                  onClick={() => navigateToMeal(meal.name)}
+                  key={meal.id}
+                >
+                  {meal.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      }
     </>
   );
 };
+
+interface ITag {
+  text: string;
+  isActive?: boolean;
+  onClick?: () => void;
+}
+
+const Tag = ({ text, isActive = false, onClick }: ITag) => {
+  return (
+    <div onClick={onClick} className={`tag ${isActive ? "tag-active" : ""}`}>
+      <p>{text}</p>
+    </div>
+  )
+}
+
+export const RecipeListItem = ({ recipe }: { recipe: IRecipe }) => {
+
+  const navigate = useNavigate();
+
+  const navigateToRecipe = () => {
+    navigate("/recipe", { state: { recipe: recipe } });
+  };
+
+
+  return (
+    <div onClick={() => navigateToRecipe()} className="recipe-list-item">
+      <h2 key={recipe.id}>{recipe.name}</h2>
+      <div className="recipe-list-item-details">
+        <p><BiTimer size={18} /> {recipe.minutes} min</p>
+        <p><BsBarChartSteps size={18} /> {recipe.steps.length} steps</p>
+        <p><PiBowlFood size={18} /> {recipe.ingredients.length} ingredients</p>
+      </div>
+      <div className="tags">{recipe.tags.map(x => <Tag text={x} />)}</div>
+    </div>
+  )
+}
+
 
 export default Mealplan;

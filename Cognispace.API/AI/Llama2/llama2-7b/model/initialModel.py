@@ -1,4 +1,3 @@
-
 class Model:
     def __init__(self, **kwargs):
         # Uncomment the following to get access

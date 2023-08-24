@@ -25,7 +25,11 @@ app.add_middleware(
 )
 
 # Its one agent per entire application not one agent per user.
-agent_instance = LlamaAgent()
+# 8 RAM is not enough - for efficient using 
+# Future note: Buy >32 RAM minimum for AI engineering 
+
+# agent_instance = LlamaAgent()
+# agent_instance.initialize_llama()
 
 @app.get("/allRecipes")
 async def root():
@@ -85,6 +89,7 @@ async def get_recipes_by_meal(meal):
             if meal.lower() in row_recipe_name:  # Check if meal is in recipe name     
 
                 row = {property_name: row[index] for property_name, index in indices.items()}
+                row["name"] = row["name"].capitalize()
                 row["tags"] = ast.literal_eval(row["tags"])
                 row["ingredients"] = ast.literal_eval(row["ingredients"])
                 row["nutrition"] = ast.literal_eval(row["nutrition"])
@@ -142,9 +147,19 @@ async def get_recipes_by_criteria(
         for row in csvreader:
             row_ingredient = row[INGREDIENT_COLUMN_INDEX].lower() if INGREDIENT_COLUMN_INDEX < len(row) else ""
             row_recipe_name = row[RECIPE_NAME_COLUMN_INDEX].lower() if RECIPE_NAME_COLUMN_INDEX < len(row) else ""
-            
+
+
+
+
             if (ingredient and ingredient.lower() in row_ingredient) or (recipe_name and recipe_name.lower() in row_recipe_name):
-                matching_rows.append({property_name: row[index] for property_name, index in indices.items()})
+
+                row = {property_name: row[index] for property_name, index in indices.items()} 
+                row["name"] = row["name"].capitalize()
+                row["tags"] = ast.literal_eval(row["tags"])
+                row["ingredients"] = ast.literal_eval(row["ingredients"])
+                row["nutrition"] = ast.literal_eval(row["nutrition"])
+                row["steps"] = ast.literal_eval(row["steps"])
+                matching_rows.append(row)
                 if len(matching_rows) >= 100:  # Break when 100 rows are found
                     break
     
@@ -153,19 +168,19 @@ async def get_recipes_by_criteria(
     
     return {"recipes": matching_rows}
 
-@app.get("/llama")
-def chat_with_llama(human_input):
-    try:
-        modelResponse = LlamaAgent.generate(human_input)
-        return {"data": modelResponse}
-    except Exception as e:
-        return JSONResponse(content={"error": str(e)}, status_code=500)  
+# @app.get("/llama")
+# def chat_with_llama(human_input):
+#     try:
+#         modelResponse = LlamaAgent.generate(human_input)
+#         return {"data": modelResponse}
+#     except Exception as e:
+#         return JSONResponse(content={"error": str(e)}, status_code=500)  
 
-@app.get("/llama_conversation")
-def chat_with_llama_conversation(human_input):
-    try:
-        modelResponse = LlamaAgent.generate_conversations(agent_instance, human_input)
-        print(modelResponse)
-        return {"data": modelResponse}
-    except Exception as e:
-        return JSONResponse(content={"error": str(e)}, status_code=500)  
+# @app.get("/llama_conversation")
+# def chat_with_llama_conversation(human_input):
+#     try:
+#         modelResponse = LlamaAgent.generate_conversations(agent_instance, human_input)
+#         print(modelResponse)
+#         return {"data": modelResponse}
+#     except Exception as e:
+#         return JSONResponse(content={"error": str(e)}, status_code=500)  

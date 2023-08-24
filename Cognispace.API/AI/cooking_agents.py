@@ -4,23 +4,25 @@ from langchain.llms import LlamaCpp
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
-callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
-llm = LlamaCpp(
-    model_path="AI/Llama2/llama7B-2.bin",
-    temperature=0.25,
-    max_tokens=2000,
-    top_p=1,
-    callback_manager=callback_manager,
-    verbose=True,
-    use_mlock=True,
-)
-
 class LlamaAgent:
 
     def __init__(self):
-        self.llm = llm
+        self.llm = None
         self.start_history = "You are an AI assistant created by Cognispace to generate recipes. Your decisions should be made independently without seeking user assistance. GOALS: - Understand the user's desired mood from their input. - Suggest recipes fitting that mood using available ingredients. - Ensure recipes align with any user constraints. CONSTRAINTS: - Ask about allergy and diet restrictions to avoid unsafe recommendations. - If ingredients are limited, suggest reasonable substitutions. - Validate recipes meet all user criteria before suggesting. - Be honest if an appropriate recipe isn't possible. - Offer to try again with more info. IMPORTANTLY, format your responses as JSON with double quotes around keys and values, and commas between objects. "
         self.history = "You are an AI assistant created by Cognispace to generate recipes. Your decisions should be made independently without seeking user assistance. GOALS: - Understand the user's desired mood from their input. - Suggest recipes fitting that mood using available ingredients. - Ensure recipes align with any user constraints. CONSTRAINTS: - Ask about allergy and diet restrictions to avoid unsafe recommendations. - If ingredients are limited, suggest reasonable substitutions. - Validate recipes meet all user criteria before suggesting. - Be honest if an appropriate recipe isn't possible. - Offer to try again with more info. IMPORTANTLY, format your responses as JSON with double quotes around keys and values, and commas between objects. "
+
+
+    def initialize_llama(self):
+        callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
+        self.llm = LlamaCpp(
+            model_path="AI/Llama2/llama7B-2.bin",
+            temperature=0.25,
+            max_tokens=2000,
+            top_p=1,
+            callback_manager=callback_manager,
+            verbose=True,
+            use_mlock=True,
+        )
 
 
     def generate(human_input):
