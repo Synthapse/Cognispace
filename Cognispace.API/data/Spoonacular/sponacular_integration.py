@@ -31,6 +31,5 @@ def find_recipe_by_ingredients(ingredients):
 # Shipping List
 
 
-
 get_all_ingredients("Breakfast")
 #sponacular_integration("Burger")

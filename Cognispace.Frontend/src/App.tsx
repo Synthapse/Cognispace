@@ -12,7 +12,6 @@ function App() {
   return (
     <div className="App">
       <HashRouter>
-
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/food" element={<FoodAgent />} />
@@ -22,7 +21,6 @@ function App() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/recipe" element={<Recipe />} />
         </Routes>
-
       </HashRouter>
     </div>
   );
