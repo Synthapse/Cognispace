@@ -1,21 +1,14 @@
 import { signOut } from "firebase/auth";
 import { auth } from "../auth/firebase";
-import { redirect, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { IoIosReturnLeft } from "react-icons/io";
 import { gapi } from "gapi-script";
 import { useEffect, useState } from "react";
+import '../style/main.scss'
 
 export const Profile = () => {
 
     const navigate = useNavigate();
-
-    const logOut = async () => {
-        try {
-            await signOut(auth);
-        } catch (err) {
-            console.error(err);
-        }
-    };
 
     const getEvents = (calendarID: string, apiKey: string) => {
 
@@ -105,13 +98,9 @@ export const Profile = () => {
             // add breakfast
             // add dinner
             // add supper
-
-
             var accessToken = response.access_token;
             var idToken = response.id_token;
             setAccessToken(accessToken)
-            
-
 
             console.log(accessToken)
             console.log(idToken)
@@ -119,8 +108,8 @@ export const Profile = () => {
     }
 
     useEffect(() => {
-        getAccessToken()
-        const events = getEvents(googleCalendarId, googleCalendarAPIKey);
+        //getAccessToken()
+        //const events = getEvents(googleCalendarId, googleCalendarAPIKey);
     }, []);
 
     const event = {
@@ -145,6 +134,10 @@ export const Profile = () => {
         },
     };
 
+    const navigateToIngredients = () => {
+        navigate("/ingredients");
+    };
+
     return (
         <div style={{ paddingTop: '5%', paddingLeft: ' 70px' }}>
             <div onClick={() => navigate(-1)} style={{ display: 'flex' }}> <IoIosReturnLeft style={{ fontSize: '24px ' }} /><p style={{ fontSize: '12px' }}>return </p></div>
@@ -152,12 +145,14 @@ export const Profile = () => {
             <h3>{auth?.currentUser?.displayName}</h3>
             <p>{auth?.currentUser?.email}</p>
             <hr /><br /><br />
-            <h4>My Ingredients:</h4>
 
-            Milk, eggs, tomato, strawberries
+            <button onClick={() => navigateToIngredients()} className="primary-button">
+                Manage ingredients
+            </button>
 
+            <br /><br /><br /><br />
 
-            <br />
+            <hr />
             <p onClick={() => addEvent(googleCalendarId, event)}>Add Event:</p>
 
 
