@@ -18,7 +18,7 @@ async def auth_lidl():
     tickets = []
     products = []
 
-    max_shopping_times = 3
+    max_shopping_times = 1
 
     for index, ticket in enumerate(lidl.tickets()):
         if index >= max_shopping_times:
