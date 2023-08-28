@@ -39,7 +39,7 @@ export const writeIngredientsData = async (data: IIngredientsEvent) => {
     try {
         // Query to check if a document with the same userId and title already exists
         const querySnapshot = await getDocs(
-            query(collection(db, "Ingredients"),
+            query(collection(db, "ingredients"),
                 where("userId", "==", userId),
                 where("title", "==", title)
             )
@@ -47,7 +47,7 @@ export const writeIngredientsData = async (data: IIngredientsEvent) => {
 
         if (querySnapshot.empty) {
             // No matching document found, add the new document
-            const docRef = await addDoc(collection(db, "Ingredients"), {
+            const docRef = await addDoc(collection(db, "ingredients"), {
                 data: data,
             });
             console.log("Document written with ID: ", docRef.id);

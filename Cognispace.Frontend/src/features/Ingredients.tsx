@@ -6,6 +6,13 @@ import config from "../config.json";
 import { auth, readIngredientsData, writeIngredientsData } from "../auth/firebase";
 import { DocumentData } from "firebase/firestore";
 
+
+interface IProduct {
+    name: string;
+    quantity: string;
+    currentUnitPrice: string;
+}
+
 export const Ingredients = () => {
 
     const navigate = useNavigate();
@@ -13,12 +20,12 @@ export const Ingredients = () => {
     // Lidl API
     // https://github.com/KoenZomers/LidlApi/tree/main
 
-    const [allProducts, setAllProducts] = useState<any[]>([])
+    const [allProducts, setAllProducts] = useState<IProduct[]>([])
     const [loading, setLoading] = useState<boolean>(false)
 
     const [ingredients, setIngredients] = useState<any[]>([])
 
-    const [ingredientsToAccept, setIngredientsToAccept] = useState<any[]>([])
+    const [selectedIngredients, setSelectedIngredients] = useState<IProduct[]>([])
 
 
     const getAllProducts = async () => {
@@ -42,21 +49,18 @@ export const Ingredients = () => {
         }
     };
 
-    const saveDataToUserHistory = (summarizationText: string) => {
+    const saveIngredients = () => {
         writeIngredientsData({
             userId: auth.currentUser?.uid ?? "",
-            title: ingredientsToAccept.toString(),
+            title: selectedIngredients.map(x => x.name).toString(),
         })
-    }
-
-    const saveIngredients = () => {
-        console.log('test')
     }
 
 
     useEffect(() => {
         setLoading(true)
         getAllProducts()
+        fetchUserIngredients()
 
     }, [])
 
@@ -79,8 +83,8 @@ export const Ingredients = () => {
         const selectedProducts = updatedCheckedState.map((item, index) =>
             item === true ? allProducts[index] : null
         ).filter(x => x !== null);
-
-        console.log(selectedProducts)
+        //@ts-ignore
+        setSelectedIngredients(selectedProducts)
     };
 
 
@@ -89,6 +93,12 @@ export const Ingredients = () => {
             <div onClick={() => navigate(-1)} style={{ display: 'flex' }}> <IoIosReturnLeft style={{ fontSize: '24px ' }} /><p style={{ fontSize: '12px' }}>return </p></div>
             <h2>Ingredients:</h2>
 
+            {ingredients?.map((ingredient: any) => {
+                return (
+                    <p>
+                        {ingredient.title}
+                    </p>)
+            })}
             <h2>My Products:</h2>
             {loading ? <p>Loading...</p> :
                 allProducts.map((product, index) => {
