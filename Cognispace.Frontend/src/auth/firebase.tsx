@@ -2,7 +2,7 @@ import { GoogleAuthProvider, getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import config from "../config.json";
-import { getDocs, getFirestore, query, where } from "firebase/firestore";
+import { doc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -30,29 +30,37 @@ const db = getFirestore(app);
 
 interface IIngredientsEvent {
     userId: string;
-    title: string;
+    ingredients: string[];
 }
 
 export const writeIngredientsData = async (data: IIngredientsEvent) => {
-    const { userId, title } = data;
+    const { userId } = data;
 
     try {
-        // Query to check if a document with the same userId and title already exists
+        // Query to check if a document with the same userId and already exists
         const querySnapshot = await getDocs(
             query(collection(db, "ingredients"),
-                where("userId", "==", userId),
-                where("title", "==", title)
+                where("data.userId", "==", userId)
             )
         );
 
         if (querySnapshot.empty) {
             // No matching document found, add the new document
             const docRef = await addDoc(collection(db, "ingredients"), {
-                data: data,
+                userId: data.userId,
+                ingredients: data.ingredients
             });
             console.log("Document written with ID: ", docRef.id);
         } else {
             console.log("Duplicate document not added.");
+
+            const documentData = querySnapshot.docs.map((doc) => doc.data());
+
+            const docRef = await updateDoc(doc(db, "ingredients", querySnapshot.docs[0].id), {
+                userId: data.userId,
+                ingredients: [...new Set([...data.ingredients, ...documentData[0].data.ingredients])]
+            });
+            console.log("Document updated with ID: ", docRef);
         }
     } catch (e) {
         console.error("Error adding document: ", e);
@@ -62,9 +70,9 @@ export const writeIngredientsData = async (data: IIngredientsEvent) => {
 export const readIngredientsData = async (userId: string) => {
     try {
         const querySnapshot = await getDocs(
-            query(collection(db, "Ingredients"), where("data.userId", "==", userId))
+            query(collection(db, "ingredients"), where("userId", "==", userId))
         );
-        const newData = querySnapshot.docs.map((doc) => doc.data());
+        const newData = querySnapshot.docs.map((doc) => doc.data().ingredients);
         return newData;
     } catch (error) {
         console.log("Error getting documents: ", error);

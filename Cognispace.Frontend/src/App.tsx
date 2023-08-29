@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { BrowserRouter as Router, Route, Routes, HashRouter } from 'react-router-dom'; // Import BrowserRouter, Route, and Routes components
+import { useEffect, useState } from 'react';
+import { Route, Routes, HashRouter } from 'react-router-dom'; // Import BrowserRouter, Route, and Routes components
 import Home from './features/Home';
 import Mealplan from './features/Mealplan';
 import Meal from './features/Meal';
@@ -8,10 +8,25 @@ import Chat from './features/Chat';
 import FoodAgent from './features/FoodAgent';
 import Recipe from './features/Recipe';
 import { Ingredients } from './features/Ingredients';
+import './style/main.scss';
+import { ImSun } from 'react-icons/im';
 
 function App() {
+  const [theme, setTheme] = useState('light');
+  const toggleTheme = () => {
+    if (theme === 'light') {
+      setTheme('dark');
+    } else {
+      setTheme('light');
+    }
+  };
+
+  useEffect(() => {
+    document.body.className = theme;
+  }, [theme]);
   return (
-    <div className="App">
+    <div className={`App ${theme}`}>
+      <div style={{ position: 'absolute', right: 20 }}><ImSun style={{ fontSize: '24px' }} onClick={toggleTheme}>Toggle Theme</ImSun></div>
       <HashRouter>
         <Routes>
           <Route path="/" element={<Home />} />

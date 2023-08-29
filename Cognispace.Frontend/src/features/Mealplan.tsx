@@ -13,6 +13,7 @@ import config from "../config.json"
 import { BiTimer } from "react-icons/bi";
 import { PiBowlFood } from "react-icons/pi";
 import { BsBarChartSteps } from "react-icons/bs";
+import { Tag } from "../components/Tag";
 
 const meals = [
   {
@@ -327,20 +328,6 @@ const Mealplan = () => {
     </>
   );
 };
-
-interface ITag {
-  text: string;
-  isActive?: boolean;
-  onClick?: () => void;
-}
-
-const Tag = ({ text, isActive = false, onClick }: ITag) => {
-  return (
-    <div onClick={onClick} className={`tag ${isActive ? "tag-active" : ""}`}>
-      <p>{text}</p>
-    </div>
-  )
-}
 
 export const RecipeListItem = ({ recipe }: { recipe: IRecipe }) => {
 

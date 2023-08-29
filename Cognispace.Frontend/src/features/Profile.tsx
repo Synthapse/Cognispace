@@ -108,8 +108,8 @@ export const Profile = () => {
     }
 
     useEffect(() => {
-        //getAccessToken()
-        //const events = getEvents(googleCalendarId, googleCalendarAPIKey);
+        getAccessToken()
+        const events = getEvents(googleCalendarId, googleCalendarAPIKey);
     }, []);
 
     const event = {

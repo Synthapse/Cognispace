@@ -159,9 +159,6 @@ async def get_recipes_by_criteria(
                 row_ingredient = row[INGREDIENT_COLUMN_INDEX].lower() if INGREDIENT_COLUMN_INDEX < len(row) else ""
                 row_recipe_name = row[RECIPE_NAME_COLUMN_INDEX].lower() if RECIPE_NAME_COLUMN_INDEX < len(row) else ""
 
-
-
-
                 if (ingredient and ingredient.lower() in row_ingredient) or (recipe_name and recipe_name.lower() in row_recipe_name):
 
                     row = {property_name: row[index] for property_name, index in indices.items()} 
@@ -186,7 +183,6 @@ async def get_recipes_by_criteria(
 async def get_ingredients_from_image(image_url: str):
 
     try:
-
         authenticator = GoogleAuthenticator()
         authenticator.gauth()
         data = authenticator.read_text_from_image(image_url)

@@ -1,0 +1,29 @@
+
+.product-checkbox {
+    
+    display: flex;
+    margin: 12px 0;
+}
+
+.product-checkbox-label {
+
+    margin-left: 12px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    input {
+        margin-right: 10px;
+    }
+
+    label {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+    }
+    > p {
+        font-size: 14px;
+        font-weight: normal;
+        color: #555;
+    }
+}
+

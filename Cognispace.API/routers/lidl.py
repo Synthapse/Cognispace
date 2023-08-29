@@ -18,20 +18,31 @@ async def auth_lidl():
     tickets = []
     products = []
 
-    max_shopping_times = 1
+    max_shopping_times = 2
 
     for index, ticket in enumerate(lidl.tickets()):
         if index >= max_shopping_times:
-            break  # Stop after the first 5 iterations
+            break  # Stop after the first  iterations
 
         ticket_data = lidl.ticket(ticket["id"])
+        print(ticket_data)
         for product in ticket_data["itemsLine"]:
-            products.append(
-                {
-                    "currentUnitPrice": product["currentUnitPrice"],
-                    "name": product["name"],
-                    "quantity": product["quantity"]
-                }
-            )
+            product_name = product["name"]
+                
+            # Check if the product already exists in the products list
+            existing_product = next((p for p in products if p["name"] == product_name), None)
+            
+            if existing_product:
+                # Update the quantity of the existing product
+                existing_product["quantity"] += float(product["quantity"])
+            else:
+                # Product doesn't exist, add it to the list
+                products.append(
+                    {
+                        "currentUnitPrice": product["currentUnitPrice"],
+                        "name": product_name,
+                        "quantity": float(product["quantity"])
+                    }
+                )
         
     return products
