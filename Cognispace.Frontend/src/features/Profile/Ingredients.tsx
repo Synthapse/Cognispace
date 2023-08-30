@@ -1,7 +1,5 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { IoIosReturnLeft } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
 import config from "../../config.json";
 import { auth, readIngredientsData, writeIngredientsData } from "../../auth/firebase";
 import '../../style/ingredients.scss'
@@ -22,7 +20,6 @@ interface IIngredient {
 
 export const Ingredients = () => {
 
-    const navigate = useNavigate();
     const [allProducts, setAllProducts] = useState<IProduct[]>([])
     const [loading, setLoading] = useState<boolean>(false)
 
@@ -100,7 +97,7 @@ export const Ingredients = () => {
                 )
             })}
             <>
-                {loading && allProducts ?
+                {loading && !allProducts ?
                     <>
                         <p>Loading...</p>
                     </> :

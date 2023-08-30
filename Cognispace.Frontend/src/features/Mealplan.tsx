@@ -1,17 +1,15 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { CgSearch } from "react-icons/cg";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../style/Mealplan.scss";
 import { IRecipe } from "./Meal";
-import { BsSearch, BsFilter } from "react-icons/bs";
+import { BsFilter } from "react-icons/bs";
 
 import config from "../config.json"
-import { BiTimer } from "react-icons/bi";
-import { PiBowlFood } from "react-icons/pi";
-import { BsBarChartSteps } from "react-icons/bs";
 import { Tag } from "../components/Tag";
 import Menu from "../components/Menu";
+import RecipeListItem from "../components/RecipeListItem";
 
 const meals = [
   {
@@ -56,13 +54,10 @@ const Mealplan = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-
   const [showFilters, setShowFilters] = useState(false);
   const [ingredientsFilter, setIngredientsFilter] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
-
 
   const toggleSearch = () => {
     setExpanded(!expanded);
@@ -134,9 +129,7 @@ const Mealplan = () => {
       const response = await axios.get(
         `${config.apps.CognispaceAPI.url}/recipes?${queryString}`
       );
-      console.log(response.data.recipes);
       setRecipes(response.data.recipes);
-      console.log(response);
     } catch (error) {
       setError("Error fetching recipes");
     } finally {
@@ -146,19 +139,16 @@ const Mealplan = () => {
 
   const selectTag = async (tag: string) => {
 
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter(t => t !== tag));
-    }
-    else {
-      setSelectedTags([...selectedTags, tag])
-    }
+    selectedTags.includes(tag)
+      ? setSelectedTags(selectedTags.filter(t => t !== tag))
+      : setSelectedTags([...selectedTags, tag])
 
     setRecipes(recipes.filter((x: IRecipe) => x.tags.includes(tag)))
 
   }
 
   return (
-    <>
+    <div className="profile-container">
       <div className="navbar">
         <Menu />
         <div className="search-filters">
@@ -190,7 +180,6 @@ const Mealplan = () => {
             />
 
             {expanded && (
-              // @ts-ignore
               <button
                 className="search-button btn"
                 onClick={searchRecipes}
@@ -228,9 +217,7 @@ const Mealplan = () => {
           </div>
         </>
       )}
-      {recipes.length
-
-        ?
+      {recipes.length ?
         recipes.length > 0 && (
           <ul className="search-results">
             {recipes.map((recipe: IRecipe) => (
@@ -240,54 +227,30 @@ const Mealplan = () => {
         )
         :
         <>
-          <div className="container">
-            {/* <button className="logout-button" onClick={() => navigate("/chat")}>
+          {/* <button className="logout-button" onClick={() => navigate("/chat")}>
               Talk with AI
             </button> */}
-            <div className="days-navigation">
-              <p>Today</p>
-              <div className="ms-5 section-2">Tomorrow</div>
-            </div>
-
-            <ul className="list-unstyled mt-5">
-              {meals.map((meal) => (
-                <li
-                  className={isAfter(meal.time) ? "line" : ""}
-                  onClick={() => navigateToMeal(meal.name)}
-                  key={meal.id}
-                >
-                  {meal.name}
-                </li>
-              ))}
-            </ul>
+          <div className="days-navigation">
+            <p>Today</p>
+            <div className="ms-5 section-2">Tomorrow</div>
           </div>
+
+          <ul className="list-unstyled mt-5">
+            {meals.map((meal) => (
+              <li
+                className={isAfter(meal.time) ? "line" : ""}
+                onClick={() => navigateToMeal(meal.name)}
+                key={meal.id}
+              >
+                {meal.name}
+              </li>
+            ))}
+          </ul>
         </>
       }
-    </>
+    </div>
   );
 };
-
-export const RecipeListItem = ({ recipe }: { recipe: IRecipe }) => {
-
-  const navigate = useNavigate();
-
-  const navigateToRecipe = () => {
-    navigate("/recipe", { state: { recipe: recipe } });
-  };
-
-
-  return (
-    <div onClick={() => navigateToRecipe()} className="recipe-list-item">
-      <h2 key={recipe.id}>{recipe.name}</h2>
-      <div className="recipe-list-item-details">
-        <p><BiTimer size={18} /> {recipe.minutes} min</p>
-        <p><BsBarChartSteps size={18} /> {recipe.steps.length} steps</p>
-        <p><PiBowlFood size={18} /> {recipe.ingredients.length} ingredients</p>
-      </div>
-      <div className="tags">{recipe.tags.map(x => <Tag text={x} />)}</div>
-    </div>
-  )
-}
 
 
 export default Mealplan;

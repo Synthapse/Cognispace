@@ -11,6 +11,9 @@ import { Ingredients } from './features/Profile/Ingredients';
 import './style/main.scss';
 import { ImSun } from 'react-icons/im';
 import { Calendar } from './features/Profile/Calendar';
+import React from 'react';
+
+export const ThemeContext = React.createContext('light');
 
 function App() {
   const [theme, setTheme] = useState('light');
@@ -22,25 +25,28 @@ function App() {
     }
   };
 
+
   useEffect(() => {
     document.body.className = theme;
   }, [theme]);
   return (
     <div className={`App ${theme}`}>
-      <div style={{ position: 'absolute', right: 20 }}><ImSun style={{ fontSize: '24px' }} onClick={toggleTheme}>Toggle Theme</ImSun></div>
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/food" element={<FoodAgent />} />
-          <Route path="/mealplan" element={<Mealplan />} />
-          <Route path="/meal" element={<Meal />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/ingredients" element={<Ingredients />} />
-          <Route path="/calendar" element={<Calendar />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/recipe" element={<Recipe />} />
-        </Routes>
-      </HashRouter>
+      <ThemeContext.Provider value={theme}>
+        <div style={{ position: 'absolute', right: 20 }}><ImSun style={{ fontSize: '24px' }} onClick={toggleTheme}>Toggle Theme</ImSun></div>
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/food" element={<FoodAgent />} />
+            <Route path="/mealplan" element={<Mealplan />} />
+            <Route path="/meal" element={<Meal />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/ingredients" element={<Ingredients />} />
+            <Route path="/calendar" element={<Calendar />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/recipe" element={<Recipe />} />
+          </Routes>
+        </HashRouter>
+      </ThemeContext.Provider>
     </div>
   );
 }

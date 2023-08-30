@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import '../style/Home.css';
 import { useNavigate } from 'react-router-dom';
 import heroImage from '../media/heroimage.svg';
-import { signInWithPopup, signOut } from "firebase/auth";
+import { signInWithPopup } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
 import { auth, googleProvider } from "../auth/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -15,7 +15,6 @@ const FoodAgent = () => {
   const signInWithGoogle = async () => {
     try {
       const test = await signInWithPopup(auth, googleProvider);
-      console.log(test);
     } catch (err) {
       console.error(err);
     }
@@ -27,21 +26,14 @@ const FoodAgent = () => {
 
   // Listen for changes in authentication state
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user: any) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
     });
 
     return () => unsubscribe();
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      setUser(null);
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-  };
+
 
   return (
     <div className="container-fluid main">
@@ -59,7 +51,7 @@ const FoodAgent = () => {
                 <div className="user-profile">
                   {!user ? (
                     <div className="sign-up" onClick={() => signInWithGoogle()} style={{ display: "flex" }}>
-                      <p>Sign up<FcGoogle /></p>
+                      <FcGoogle style={{ fontSize: '18px' }} /><p>Sign up</p>
                     </div>
                   ) : (
                     <div className="user-info" onClick={() => navigateToProfile()}>
@@ -78,8 +70,8 @@ const FoodAgent = () => {
                       <div className="user-details">
                         <h5 className="user-name">{auth?.currentUser?.displayName}</h5>
                         <p className="user-email">{auth?.currentUser?.email}</p>
-                        <button className="logout-button" onClick={handleLogout}>
-                          Logout
+                        <button className="logout-button">
+                          View Profile
                         </button>
                       </div>
                     </div>
