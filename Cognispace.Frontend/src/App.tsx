@@ -3,13 +3,14 @@ import { Route, Routes, HashRouter } from 'react-router-dom'; // Import BrowserR
 import Home from './features/Home';
 import Mealplan from './features/Mealplan';
 import Meal from './features/Meal';
-import { Profile } from './features/Profile';
+import { Profile } from './features/Profile/Profile';
 import Chat from './features/Chat';
 import FoodAgent from './features/FoodAgent';
 import Recipe from './features/Recipe';
-import { Ingredients } from './features/Ingredients';
+import { Ingredients } from './features/Profile/Ingredients';
 import './style/main.scss';
 import { ImSun } from 'react-icons/im';
+import { Calendar } from './features/Profile/Calendar';
 
 function App() {
   const [theme, setTheme] = useState('light');
@@ -35,6 +36,7 @@ function App() {
           <Route path="/meal" element={<Meal />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/ingredients" element={<Ingredients />} />
+          <Route path="/calendar" element={<Calendar />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/recipe" element={<Recipe />} />
         </Routes>

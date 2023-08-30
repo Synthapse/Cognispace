@@ -1,14 +1,69 @@
-import { signOut } from "firebase/auth";
-import { auth } from "../auth/firebase";
-import { useNavigate } from 'react-router-dom';
-import { IoIosReturnLeft } from "react-icons/io";
-import { gapi } from "gapi-script";
+import axios from "axios";
 import { useEffect, useState } from "react";
-import '../style/main.scss'
+import { IoIosReturnLeft } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
+import config from "../../config.json";
+import { auth, readIngredientsData, writeIngredientsData } from "../../auth/firebase";
+import '../../style/ingredients.scss'
+import { Tag } from "../../components/Tag";
+import { gapi } from "gapi-script";
+import Menu from "../../components/Menu";
 
-export const Profile = () => {
+interface IProduct {
+    name: string;
+    quantity: string;
+    currentUnitPrice: string;
+}
 
-    const navigate = useNavigate();
+interface IIngredient {
+    title: string[];
+    userId: string;
+}
+
+export const Calendar = () => {
+
+
+    const googleCalendarAPIKey = "AIzaSyCsNmlCJJMBohSqrLFs1itcf0CIu3u-4ic"
+    const googleCalendarAccessToken = ""
+    const googleCalendarId = "piotrzak77@gmail.com"
+
+    const refreshToken = "1//04MLFH7jgMFuOCgYIARAAGAQSNwF-L9IrtPI49knqZ3C4Yyh8MZpC1x_Kp1fGZpTp6R6wKY8VvYRVeSoTff5KoOkNiJEm5x_wn3g"
+    const clientId = "946555989276-mbsnp5730qklm9iedug2qpti0kajvjc8.apps.googleusercontent.com"
+    const clientSecret = "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"
+
+    const scopes =
+        "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar";
+
+    const [events, setEvents] = useState<any>([]);
+    const [accessToken, setAccessToken] = useState<any>([]);
+
+    const getAccessToken = () => {
+
+        console.log('get access token...')
+
+        gapi?.auth2?.authorize({
+            client_id: clientId,
+            scope: scopes,
+            response_type: 'id_token permission',
+            redirect_uri: false,
+        }, function (response: { error: any; access_token: any; id_token: any; }) {
+            if (response.error) {
+                console.log(response.error)
+                return;
+            }
+            // this access token allow to add events in calendar
+
+            // add breakfast
+            // add dinner
+            // add supper
+            var accessToken = response.access_token;
+            var idToken = response.id_token;
+            setAccessToken(accessToken)
+
+            console.log(accessToken)
+            console.log(idToken)
+        });
+    }
 
     const getEvents = (calendarID: string, apiKey: string) => {
 
@@ -64,51 +119,8 @@ export const Profile = () => {
         gapi.load("client", initiate);
     };
 
-
-    const googleCalendarAPIKey = "AIzaSyCsNmlCJJMBohSqrLFs1itcf0CIu3u-4ic"
-    const googleCalendarAccessToken = ""
-    const googleCalendarId = "piotrzak77@gmail.com"
-
-    const refreshToken = "1//04MLFH7jgMFuOCgYIARAAGAQSNwF-L9IrtPI49knqZ3C4Yyh8MZpC1x_Kp1fGZpTp6R6wKY8VvYRVeSoTff5KoOkNiJEm5x_wn3g"
-    const clientId = "946555989276-mbsnp5730qklm9iedug2qpti0kajvjc8.apps.googleusercontent.com"
-    const clientSecret = "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"
-
-    const scopes =
-        "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar";
-
-    const [events, setEvents] = useState<any>([]);
-    const [accessToken, setAccessToken] = useState<any>([]);
-
-    const getAccessToken = () => {
-
-        console.log('get access token...')
-
-        gapi?.auth2?.authorize({
-            client_id: clientId,
-            scope: scopes,
-            response_type: 'id_token permission',
-            redirect_uri: false,
-        }, function (response: { error: any; access_token: any; id_token: any; }) {
-            if (response.error) {
-                console.log(response.error)
-                return;
-            }
-            // this access token allow to add events in calendar
-
-            // add breakfast
-            // add dinner
-            // add supper
-            var accessToken = response.access_token;
-            var idToken = response.id_token;
-            setAccessToken(accessToken)
-
-            console.log(accessToken)
-            console.log(idToken)
-        });
-    }
-
     useEffect(() => {
-        getAccessToken()
+        //getAccessToken()
         const events = getEvents(googleCalendarId, googleCalendarAPIKey);
     }, []);
 
@@ -134,30 +146,12 @@ export const Profile = () => {
         },
     };
 
-    const navigateToIngredients = () => {
-        navigate("/ingredients");
-    };
-
     return (
-        <div style={{ paddingTop: '5%', paddingLeft: ' 70px' }}>
-            <div onClick={() => navigate(-1)} style={{ display: 'flex' }}> <IoIosReturnLeft style={{ fontSize: '24px ' }} /><p style={{ fontSize: '12px' }}>return </p></div>
-            <img style={{ borderRadius: '50%', width: '72px', height: '72px' }} src={auth?.currentUser?.photoURL ?? ""} />
-            <h3>{auth?.currentUser?.displayName}</h3>
-            <p>{auth?.currentUser?.email}</p>
-            <hr /><br /><br />
-
-            <button onClick={() => navigateToIngredients()} className="primary-button">
-                Manage ingredients
-            </button>
-
-            <br /><br /><br /><br />
-
-            <hr />
-            <p onClick={() => addEvent(googleCalendarId, event)}>Add Event:</p>
-
-
+        <div className="profile-container">
+            <Menu />
+            <button onClick={() => addEvent(googleCalendarId, event)} className="primary-button">
+                Add Event</button>
             <br />
-            Calendar:
             <ul>
                 {events?.map((event: any) => (
                     <>
@@ -169,6 +163,6 @@ export const Profile = () => {
                     </>
                 ))}
             </ul>
-        </div>
-    );
-};
+        </div >
+    )
+}

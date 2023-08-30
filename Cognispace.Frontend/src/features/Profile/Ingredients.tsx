@@ -2,10 +2,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { IoIosReturnLeft } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-import config from "../config.json";
-import { auth, readIngredientsData, writeIngredientsData } from "../auth/firebase";
-import '../style/ingredients.scss'
-import { Tag } from "../components/Tag";
+import config from "../../config.json";
+import { auth, readIngredientsData, writeIngredientsData } from "../../auth/firebase";
+import '../../style/ingredients.scss'
+import { Tag } from "../../components/Tag";
+import Menu from "../../components/Menu";
 
 
 interface IProduct {
@@ -87,8 +88,8 @@ export const Ingredients = () => {
 
 
     return (
-        <div style={{ paddingTop: '5%', paddingLeft: ' 70px' }}>
-            <div onClick={() => navigate(-1)} style={{ display: 'flex' }}> <IoIosReturnLeft style={{ fontSize: '24px ' }} /><p style={{ fontSize: '12px' }}>return </p></div>
+        <div className="profile-container">
+            <Menu />
             <h2>Ingredients:</h2>
 
             {ingredients?.map((ingredient: any) => {

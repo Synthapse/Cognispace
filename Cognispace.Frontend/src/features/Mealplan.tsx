@@ -2,18 +2,16 @@ import React, { useState, useRef, useEffect } from "react";
 import { CgSearch } from "react-icons/cg";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { signInWithPopup, signOut } from "firebase/auth";
-import { FcGoogle } from "react-icons/fc";
-import { auth, googleProvider } from "../auth/firebase";
 import "../style/Mealplan.scss";
 import { IRecipe } from "./Meal";
 import { BsSearch, BsFilter } from "react-icons/bs";
-import { onAuthStateChanged } from "firebase/auth";
+
 import config from "../config.json"
 import { BiTimer } from "react-icons/bi";
 import { PiBowlFood } from "react-icons/pi";
 import { BsBarChartSteps } from "react-icons/bs";
 import { Tag } from "../components/Tag";
+import Menu from "../components/Menu";
 
 const meals = [
   {
@@ -64,7 +62,7 @@ const Mealplan = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const [user, setUser] = useState(auth.currentUser);
+
 
   const toggleSearch = () => {
     setExpanded(!expanded);
@@ -108,19 +106,6 @@ const Mealplan = () => {
 
   const navigateToMeal = (meal: string) => {
     navigate("/meal", { state: { meal: meal } });
-  };
-
-  const signInWithGoogle = async () => {
-    try {
-      const test = await signInWithPopup(auth, googleProvider);
-      console.log(test);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const navigateToProfile = () => {
-    navigate("/profile");
   };
 
   const currentDateTime = new Date();
@@ -172,28 +157,10 @@ const Mealplan = () => {
 
   }
 
-
-
-  // Listen for changes in authentication state
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user: any) => {
-      setUser(user);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      setUser(null);
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-  };
   return (
     <>
       <div className="navbar">
+        <Menu />
         <div className="search-filters">
           <div className={`search-container mt-3 ${expanded ? "expanded" : ""}`}>
             <div className="search-icon">
@@ -240,35 +207,6 @@ const Mealplan = () => {
             {loading && <p className="loading-message">Loading...</p>}
             {error && <p className="error-message">Error: {error}</p>}
           </div>
-        </div>
-        <div className="user-profile">
-          {!user ? (
-            <div className="sign-up" onClick={() => signInWithGoogle()} style={{ display: "flex" }}>
-              <p>Sign up<FcGoogle /></p>
-            </div>
-          ) : (
-            <div className="user-info" onClick={() => navigateToProfile()}>
-              <div className="user-image">
-                {auth?.currentUser?.photoURL ? (
-                  <img
-                    src={auth?.currentUser?.photoURL ?? ""}
-                    alt="User Profile"
-                  />
-                ) : (
-                  <div className="default-user-image">
-                    <p>{auth?.currentUser?.email?.charAt(0).toUpperCase()}</p>
-                  </div>
-                )}
-              </div>
-              <div className="user-details">
-                <h5 className="user-name">{auth?.currentUser?.displayName}</h5>
-                <p className="user-email">{auth?.currentUser?.email}</p>
-                <button className="logout-button" onClick={handleLogout}>
-                  Logout
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </div>
       {showFilters && (
