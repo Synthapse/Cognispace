@@ -33,7 +33,7 @@ const Meal = () => {
       <h1>{location.state.meal}</h1>
       {data?.map((recipe: IRecipe) => {
         return (
-          <RecipeListItem recipe={recipe} />
+          <RecipeListItem recipe={recipe} meal={location.state.meal} />
         )
       })}
     </div>

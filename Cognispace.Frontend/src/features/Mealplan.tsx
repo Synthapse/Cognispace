@@ -11,7 +11,13 @@ import { Tag } from "../components/Tag";
 import Menu from "../components/Menu";
 import RecipeListItem from "../components/RecipeListItem";
 
-const meals = [
+export interface IMeal {
+  id: number;
+  name: string;
+  time: number;
+}
+
+export const meals: IMeal[] = [
   {
     id: 1,
     name: "Breakfast",
