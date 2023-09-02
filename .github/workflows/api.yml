@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
 
 env:
-  PROJECT_ID: Cognispace # TODO: update Google Cloud project id
+  PROJECT_ID: cognispace # TODO: update Google Cloud project id
   GAR_LOCATION: europe-central2 # TODO: update Artifact Registry location
-  SERVICE: Cognispace # TODO: update Cloud Run service name
+  SERVICE: cognispace # TODO: update Cloud Run service name
   REGION: europe-central2 # TODO: update Cloud Run service region
 
 jobs:
@@ -51,6 +51,7 @@ jobs:
       - name: Build and Push Container
         run: |-
           gcloud auth list
+          gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev
           cd Cognispace.API
           docker build -t ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ github.sha }} ./
           docker push ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ github.sha }}
