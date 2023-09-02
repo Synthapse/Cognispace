@@ -51,6 +51,7 @@ jobs:
       - name: Build and Push Container
         run: |-
           gcloud auth list
+          gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev
           cd Cognispace.API
           docker build -t ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ github.sha }} ./
           docker push ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ github.sha }}
