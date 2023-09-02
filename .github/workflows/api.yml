@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  PROJECT_ID: Cognispace # TODO: update Google Cloud project id
+  PROJECT_ID: cognispace # TODO: update Google Cloud project id
   GAR_LOCATION: europe-central2 # TODO: update Artifact Registry location
   SERVICE: cognispace # TODO: update Cloud Run service name
   REGION: europe-central2 # TODO: update Cloud Run service region
