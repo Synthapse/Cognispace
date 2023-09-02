@@ -5,7 +5,7 @@ uvicorn>=0.15.0,<0.16.0
 requests>=2.26.0,<3.0.0
 google>=3.0.0,<4.0.0
 google_auth_oauthlib>=0.4.6,<0.5.0
-googleapiclient>=2.0.0,<3.0.0
+googleapiclient
 numpy>=1.21.2,<2.0.0
 #torch
 #transformers
