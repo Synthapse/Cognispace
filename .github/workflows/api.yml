@@ -9,7 +9,7 @@ on:
 env:
   PROJECT_ID: Cognispace # TODO: update Google Cloud project id
   GAR_LOCATION: europe-central2 # TODO: update Artifact Registry location
-  SERVICE: Cognispace # TODO: update Cloud Run service name
+  SERVICE: cognispace # TODO: update Cloud Run service name
   REGION: europe-central2 # TODO: update Cloud Run service region
 
 jobs:
