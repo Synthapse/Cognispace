@@ -136,10 +136,22 @@ export const Ingredients = () => {
                     </>}
 
                 <h2>Ingredients:</h2>
-                {allIngredients?.map((ingredient: any) => {
+                {allIngredients?.map((ingredient: any, index: number) => {
                     return (
                         <div className="tags">
-                            {ingredient}
+                            <div className="product-checkbox">
+                                <input
+                                    type="checkbox"
+                                    id={`custom-checkbox-${index}`}
+                                    name={ingredient}
+                                    value={ingredient}
+                                    checked={checkedState[index]}
+                                    onChange={() => handleOnChange(index)}
+                                />
+                                <div className="product-checkbox-label">
+                                    <label htmlFor={`custom-checkbox-${index}`}>{ingredient}</label>
+                                </div>
+                            </div>
                         </div>
                     )
                 }
