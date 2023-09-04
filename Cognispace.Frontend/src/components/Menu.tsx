@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { CgProfile } from 'react-icons/cg';
 import { PiCookingPotBold } from 'react-icons/pi';
 import { ThemeContext } from '../App';
+import { LuGlassWater } from "react-icons/lu";
 
 const Menu = () => {
 
@@ -26,8 +27,8 @@ const Menu = () => {
                     <div onClick={() => navigateToPage("/ingredients")} className="menu-item">
                         <p><PiBowlFood style={{ fontSize: iconSize }} /></p>
                     </div>
-                    <div onClick={() => navigateToPage("/calendar")} className="menu-item">
-                        <p><BsCalendar3 style={{ fontSize: iconSize }} /></p>
+                    <div onClick={() => navigateToPage("/water")} className="menu-item">
+                        <p><LuGlassWater style={{ fontSize: iconSize }} /></p>
                     </div>
                     <div onClick={() => navigateToPage("/profile")} className="menu-item">
                         <p><CgProfile style={{ fontSize: iconSize }} /></p>

@@ -3,7 +3,6 @@ import useFetch from "../hooks/useFetch";
 import { useLocation } from "react-router-dom";
 //@ts-ignore
 import Conversation from './conversations/MoodBasedAgent/conversation1.txt'
-import { stringToConversationData } from "./utils";
 import '../style/Chat.css';
 
 interface IMessage {
@@ -20,17 +19,6 @@ const Chat = () => {
     const [conversation, setConversation] = useState<any>(null);
 
     //console.log(data);
-
-    useEffect(() => {
-        document.title = "Cognispace | Chat";
-
-        fetch(Conversation)
-            .then(r => r.text())
-            .then(t => setConversation(stringToConversationData(t)))
-
-    }, []);
-
-
 
     console.log(conversation);
 

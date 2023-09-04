@@ -7,7 +7,7 @@ import { Tag } from "./Tag";
 
 import "./listitem.scss"
 import { googleCalendarId } from "../features/Profile/Calendar";
-import { addEvent } from "../features/utils";
+import { addEvent, addMinutesToDate, getSpecificHourDate } from "../features/utils";
 import { meals } from "../features/Mealplan";
 
 const RecipeListItem = ({ recipe, meal }: { recipe: IRecipe, meal?: string }) => {
@@ -18,25 +18,7 @@ const RecipeListItem = ({ recipe, meal }: { recipe: IRecipe, meal?: string }) =>
         navigate("/recipe", { state: { recipe: recipe } });
     };
 
-    const getSpecificHourDate = (hour: number, minute = 0, second = 0) => {
-        const now = new Date(); // Current date and time
-        const specificDate = new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate(),
-            hour,
-            minute,
-            second
-        );
-        return specificDate;
-    }
-
-    const addMinutesToDate = (date: Date, minutes: number) => {
-        return new Date(date.getTime() + minutes * 60000);
-    }
-
     const startDate = getSpecificHourDate(meals.find(x => x.name === meal)?.time || 0)
-
 
     return (
         <div onClick={() => navigateToRecipe()} className="recipe-list-item">

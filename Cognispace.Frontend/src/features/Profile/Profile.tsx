@@ -5,6 +5,9 @@ import { useState } from "react";
 import { signOut } from "firebase/auth";
 import { IMeal, meals } from "../Mealplan";
 
+
+import '../../style/profile.scss'
+
 export const Profile = () => {
 
     const [user, setUser] = useState(auth.currentUser);
@@ -25,15 +28,19 @@ export const Profile = () => {
             <h3>{auth?.currentUser?.displayName}</h3>
             <p>{auth?.currentUser?.email}</p>
 
+            <hr />
+
             {meals.map((meal: IMeal) => {
                 return (
                     <div>
-                        <p>{meal.name} time:</p>
-                        <p>{meal.time}</p>
+                        <p>{meal.name} time: {meal.time}</p>
                     </div>
                 )
             })}
 
+            <hr />
+
+            <hr />
             <button className="logout-button" onClick={handleLogout}>
                 Logout
             </button>

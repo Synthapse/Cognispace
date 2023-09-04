@@ -23,6 +23,7 @@ export const Ingredients = () => {
     const [allProducts, setAllProducts] = useState<IProduct[]>([])
     const [loading, setLoading] = useState<boolean>(false)
 
+    const [allIngredients, setAllIngredients] = useState<IIngredient[]>([])
     const [ingredients, setIngredients] = useState<IIngredient[]>([])
     const [selectedIngredients, setSelectedIngredients] = useState<IProduct[]>([])
 
@@ -59,6 +60,7 @@ export const Ingredients = () => {
     useEffect(() => {
         setLoading(true)
         getAllProducts()
+        getIngredients()
         fetchUserIngredients()
 
     }, [])
@@ -82,6 +84,13 @@ export const Ingredients = () => {
         setSelectedIngredients(selectedProducts)
 
     };
+
+    const getIngredients = async () => {
+        const response = await axios.get(
+            `${config.apps.CognispaceAPI.url}/ingredients`
+        );
+        setAllIngredients(response.data.data);
+    }
 
 
     return (
@@ -125,6 +134,16 @@ export const Ingredients = () => {
                             Save ingredients
                         </button>
                     </>}
+
+                <h2>Ingredients:</h2>
+                {allIngredients?.map((ingredient: any) => {
+                    return (
+                        <div className="tags">
+                            {ingredient}
+                        </div>
+                    )
+                }
+                )}
             </>
         </div >
     )

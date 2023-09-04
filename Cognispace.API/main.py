@@ -178,6 +178,36 @@ async def get_recipes_by_criteria(
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
+@app.get("/ingredients")
+async def get_ingredients():
+    try:
+        # Open the CSV file in read mode
+        with open('data/RAW_recipes.csv', 'r') as csvfile:
+            # Create a CSV reader object
+            csvreader = csv.reader(csvfile)
+            
+            # Get the header row
+            header = next(csvreader)
+            
+            # Create a list to store the rows
+            rows = []
+            
+            # Loop through each row in the CSV file
+            for row in csvreader:
+                row_ingredients = ast.literal_eval(row[10])
+                for ingredient in row_ingredients:
+                    if ingredient not in rows:
+                        rows.append(ingredient)
+                    
+                    # Limit
+                    # Return the first 1000 ingredients
+                    if len(rows) == 1000:
+                        return {"data": rows}
+        
+        # Return the list of rows as a JSON response
+        return {"data": rows}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
 
 @app.get("/ingredientsOCR")
 async def get_ingredients_from_image(image_url: str):
