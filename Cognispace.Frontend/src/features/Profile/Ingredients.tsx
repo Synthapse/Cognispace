@@ -1,10 +1,11 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import config from "../../config.json";
 import { auth, readIngredientsData, writeIngredientsData } from "../../auth/firebase";
 import '../../style/ingredients.scss'
 import { Tag } from "../../components/Tag";
 import Menu from "../../components/Menu";
+import { CgSearch } from "react-icons/cg";
 
 
 interface IProduct {
@@ -93,6 +94,21 @@ export const Ingredients = () => {
     }
 
 
+    const [searchIngredients, setSearchIngredients] = useState<any>([])
+    const searchInputRef = useRef(null);
+    
+    const toggleSearch = () => {
+        setTimeout(() => {
+            // @ts-ignore
+            searchInputRef?.current?.focus();
+        }, 0);
+
+    };
+
+    const searchIngredientsRequest = async () => {
+        console.log('test')
+    }
+
     return (
         <div className="profile-container">
             <Menu />
@@ -136,6 +152,27 @@ export const Ingredients = () => {
                     </>}
 
                 <h2>Ingredients:</h2>
+                <div className={`search-container mt-3 expanded`}>
+                    <div className="search-icon">
+                        <CgSearch size={23} />
+                    </div>
+                    <input
+                        type="text"
+                        className="search-input"
+                        style={{ width: "150px" }}
+                        ref={searchInputRef}
+                        placeholder="Ingredients"
+                        value={searchIngredients}
+                        onChange={(e) => setSearchIngredients(e.target.value)}
+                        onClick={toggleSearch}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                toggleSearch();
+                                searchIngredientsRequest();
+                            }
+                        }}
+                    />
+                </div>
                 {allIngredients?.map((ingredient: any, index: number) => {
                     return (
                         <div className="tags">
