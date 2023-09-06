@@ -179,7 +179,9 @@ async def get_recipes_by_criteria(
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
 @app.get("/ingredients")
-async def get_ingredients():
+async def get_ingredients(
+    searchIngredient: str = Query(None, description="Ingredient to search for"),
+):
     try:
         # Open the CSV file in read mode
         with open('data/RAW_recipes.csv', 'r') as csvfile:
@@ -197,7 +199,10 @@ async def get_ingredients():
                 row_ingredients = ast.literal_eval(row[10])
                 for ingredient in row_ingredients:
                     if ingredient not in rows:
-                        rows.append(ingredient)
+                        if searchIngredient is None:
+                            rows.append(ingredient)
+                        elif searchIngredient.lower() in ingredient.lower():
+                            rows.append(ingredient)
                     
                     # Limit
                     # Return the first 1000 ingredients

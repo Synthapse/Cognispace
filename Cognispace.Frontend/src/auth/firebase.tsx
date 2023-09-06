@@ -36,17 +36,19 @@ interface IIngredientsEvent {
 export const writeIngredientsData = async (data: IIngredientsEvent) => {
     const { userId } = data;
 
+    const collectionName = "ingredients";
+
     try {
         // Query to check if a document with the same userId and already exists
         const querySnapshot = await getDocs(
-            query(collection(db, "ingredients"),
+            query(collection(db, collectionName),
                 where("data.userId", "==", userId)
             )
         );
 
         if (querySnapshot.empty) {
             // No matching document found, add the new document
-            const docRef = await addDoc(collection(db, "ingredients"), {
+            const docRef = await addDoc(collection(db, collectionName), {
                 userId: data.userId,
                 ingredients: data.ingredients
             });
@@ -56,7 +58,7 @@ export const writeIngredientsData = async (data: IIngredientsEvent) => {
 
             const documentData = querySnapshot.docs.map((doc) => doc.data());
 
-            const docRef = await updateDoc(doc(db, "ingredients", querySnapshot.docs[0].id), {
+            const docRef = await updateDoc(doc(db, collectionName, querySnapshot.docs[0].id), {
                 userId: data.userId,
                 ingredients: [...new Set([...data.ingredients, ...documentData[0].data.ingredients])]
             });
@@ -67,15 +69,61 @@ export const writeIngredientsData = async (data: IIngredientsEvent) => {
     }
 }
 
-export const readIngredientsData = async (userId: string) => {
+export interface IWaterEvent {
+    userId: string;
+    amount: number;
+    date: string;
+}
+
+export const writeWaterStatsData = async (data: IWaterEvent) => {
+    const { userId, date } = data;
+
+    const collectionName = "waterstats";
+
+
+    try {
+        // Query to check if a document with the same userId and date  and already exists
+        const querySnapshot = await getDocs(
+            query(collection(db, collectionName),
+                where("userId", "==", userId),
+                where("date", "==", date)
+            )
+        );
+
+        if (querySnapshot.empty) {
+            // No matching document found, add the new document
+            const docRef = await addDoc(collection(db, collectionName), {
+                userId: data.userId,
+                amount: data.amount,
+                date: data.date
+            });
+            console.log("Document written with ID: ", docRef.id);
+        } else {
+            console.log("Duplicate document not added.");
+
+            const docRef = await updateDoc(doc(db, collectionName, querySnapshot.docs[0].id), {
+                userId: data.userId,
+                amount: data.amount,
+                date: data.date
+            });
+            console.log("Document updated with ID: ", docRef);
+        }
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
+}
+
+export const readFirebaseUserData = async (userId: string, collectionName: string) => {
     try {
         const querySnapshot = await getDocs(
-            query(collection(db, "ingredients"), where("userId", "==", userId))
+            query(collection(db, collectionName), where("userId", "==", userId))
         );
-        const newData = querySnapshot.docs.map((doc) => doc.data().ingredients);
+        const newData = querySnapshot.docs.map((doc) => doc.data());
         return newData;
     } catch (error) {
         console.log("Error getting documents: ", error);
         throw error; // Re-throw the error to be caught by the caller if needed
     }
 }
+
+

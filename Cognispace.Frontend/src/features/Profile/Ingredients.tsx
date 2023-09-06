@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import config from "../../config.json";
-import { auth, readIngredientsData, writeIngredientsData } from "../../auth/firebase";
+import { auth, readFirebaseUserData, writeIngredientsData } from "../../auth/firebase";
 import '../../style/ingredients.scss'
 import { Tag } from "../../components/Tag";
 import Menu from "../../components/Menu";
@@ -40,8 +40,8 @@ export const Ingredients = () => {
     const fetchUserIngredients = async () => {
         if (auth.currentUser) {
             try {
-                const ingredients = await readIngredientsData(auth.currentUser.uid);
-                setIngredients(ingredients)
+                const ingredients = await readFirebaseUserData(auth.currentUser.uid, "ingredients");
+                setIngredients(ingredients[0].ingredients)
                 setLoading(false)
             } catch (error) {
                 console.log("Error fetching history data: ", error);
@@ -96,7 +96,7 @@ export const Ingredients = () => {
 
     const [searchIngredients, setSearchIngredients] = useState<any>([])
     const searchInputRef = useRef(null);
-    
+
     const toggleSearch = () => {
         setTimeout(() => {
             // @ts-ignore
@@ -105,8 +105,22 @@ export const Ingredients = () => {
 
     };
 
+    const [searchIngredientsLoading, setSearchIngredientsLoading] = useState<boolean>(false)
+
     const searchIngredientsRequest = async () => {
-        console.log('test')
+
+        setSearchIngredientsLoading(true)
+        const queryParams = [];
+        if (searchIngredients) {
+            queryParams.push(`searchIngredient=${searchIngredients}`);
+        }
+
+        const queryString = queryParams.join("&");
+        const response = await axios.get(
+            `${config.apps.CognispaceAPI.url}/ingredients?${queryString}`
+        );
+        setAllIngredients(response.data.data)
+        setSearchIngredientsLoading(false)
     }
 
     return (
@@ -117,7 +131,7 @@ export const Ingredients = () => {
             {ingredients?.map((ingredient: any) => {
                 return (
                     <div className="tags">
-                        {ingredient.map((x: any) => <Tag text={x} />)}
+                        <Tag text={ingredient} />
                     </div>
                 )
             })}
@@ -173,26 +187,31 @@ export const Ingredients = () => {
                         }}
                     />
                 </div>
-                {allIngredients?.map((ingredient: any, index: number) => {
-                    return (
-                        <div className="tags">
-                            <div className="product-checkbox">
-                                <input
-                                    type="checkbox"
-                                    id={`custom-checkbox-${index}`}
-                                    name={ingredient}
-                                    value={ingredient}
-                                    checked={checkedState[index]}
-                                    onChange={() => handleOnChange(index)}
-                                />
-                                <div className="product-checkbox-label">
-                                    <label htmlFor={`custom-checkbox-${index}`}>{ingredient}</label>
+                {searchIngredientsLoading
+                    ? <p>Loading...</p> :
+                    <>
+                        {allIngredients?.map((ingredient: any, index: number) => {
+                            return (
+                                <div className="tags">
+                                    <div className="product-checkbox">
+                                        <input
+                                            type="checkbox"
+                                            id={`custom-checkbox-${index}`}
+                                            name={ingredient}
+                                            value={ingredient}
+                                            checked={checkedState[index]}
+                                            onChange={() => handleOnChange(index)}
+                                        />
+                                        <div className="product-checkbox-label">
+                                            <label htmlFor={`custom-checkbox-${index}`}>{ingredient}</label>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    )
+                            )
+                        }
+                        )}
+                    </>
                 }
-                )}
             </>
         </div >
     )
