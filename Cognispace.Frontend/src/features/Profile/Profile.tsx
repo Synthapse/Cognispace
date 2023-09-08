@@ -7,6 +7,7 @@ import { IMeal, meals } from "../Mealplan";
 
 
 import '../../style/profile.scss'
+import { Calendar } from "./Calendar";
 
 export const Profile = () => {
 
@@ -39,6 +40,8 @@ export const Profile = () => {
             })}
 
             <hr />
+
+            <Calendar/>
 
             <hr />
             <button className="logout-button" onClick={handleLogout}>

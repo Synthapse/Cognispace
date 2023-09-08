@@ -34,7 +34,7 @@ interface IIngredientsEvent {
 }
 
 export const writeIngredientsData = async (data: IIngredientsEvent) => {
-    const { userId } = data;
+    const { userId, ingredients } = data;
 
     const collectionName = "ingredients";
 
@@ -42,15 +42,15 @@ export const writeIngredientsData = async (data: IIngredientsEvent) => {
         // Query to check if a document with the same userId and already exists
         const querySnapshot = await getDocs(
             query(collection(db, collectionName),
-                where("data.userId", "==", userId)
+                where("userId", "==", userId)
             )
         );
 
         if (querySnapshot.empty) {
             // No matching document found, add the new document
             const docRef = await addDoc(collection(db, collectionName), {
-                userId: data.userId,
-                ingredients: data.ingredients
+                userId: userId,
+                ingredients: ingredients
             });
             console.log("Document written with ID: ", docRef.id);
         } else {
@@ -59,8 +59,8 @@ export const writeIngredientsData = async (data: IIngredientsEvent) => {
             const documentData = querySnapshot.docs.map((doc) => doc.data());
 
             const docRef = await updateDoc(doc(db, collectionName, querySnapshot.docs[0].id), {
-                userId: data.userId,
-                ingredients: [...new Set([...data.ingredients, ...documentData[0].data.ingredients])]
+                userId: userId,
+                ingredients: [...new Set([...data.ingredients, ...documentData[0].ingredients])]
             });
             console.log("Document updated with ID: ", docRef);
         }

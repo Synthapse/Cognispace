@@ -1,6 +1,27 @@
-
 $primaryColor: #0078d4;
 $primaryColorActive: #65b3ee;
 $secondaryColor: #FFAB00;
-
 $text-gray-color: #75777a;
+
+p {
+    font-family: Helvetica-Regular;
+}
+
+h1 {
+    font-family: Helvetica-Bold;
+}
+
+@font-face {
+    font-family: 'Helvetica-Bold';
+    src: local('Helvetica-Bold'), url(../fonts/Helvetica-Bold.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Helvetica-Regular';
+    src: local('Helvetica-Regular'), url(../fonts/Helvetica-Regular.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Helvetica-Light';
+    src: local('Helvetica-Light'), url(../fonts/Helvetica-Light.ttf) format('truetype');
+}

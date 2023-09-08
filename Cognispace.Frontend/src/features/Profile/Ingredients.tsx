@@ -21,18 +21,18 @@ interface IIngredient {
 
 export const Ingredients = () => {
 
-    const [allProducts, setAllProducts] = useState<IProduct[]>([])
+    const [marketProducts, setMarketProducts] = useState<IProduct[]>([])
     const [loading, setLoading] = useState<boolean>(false)
 
     const [allIngredients, setAllIngredients] = useState<IIngredient[]>([])
     const [ingredients, setIngredients] = useState<IIngredient[]>([])
-    const [selectedIngredients, setSelectedIngredients] = useState<IProduct[]>([])
+    const [selectedIngredients, setSelectedIngredients] = useState<string[]>([])
 
-    const getAllProducts = async () => {
+    const getProductsFromMarket = async () => {
         const response = await axios.get(
             `${config.apps.CognispaceAPI.url}/lidlAuth`
         );
-        setAllProducts(response.data);
+        setMarketProducts(response.data);
         setCheckedState(new Array(response.data.length).fill(false));
         setLoading(false)
     }
@@ -52,7 +52,7 @@ export const Ingredients = () => {
     const saveIngredients = () => {
         writeIngredientsData({
             userId: auth.currentUser?.uid ?? "",
-            ingredients: selectedIngredients.map(x => x.name)
+            ingredients: selectedIngredients
         })
         fetchUserIngredients()
     }
@@ -60,14 +60,16 @@ export const Ingredients = () => {
 
     useEffect(() => {
         setLoading(true)
-        getAllProducts()
+        getProductsFromMarket()
         getIngredients()
         fetchUserIngredients()
 
     }, [])
 
+    const [searchIngredients, setSearchIngredients] = useState<any>([])
+    // adding market products
     const [checkedState, setCheckedState] = useState(
-        new Array(allProducts.length).fill(false)
+        new Array(allIngredients.length).fill(false)
     );
 
     const handleOnChange = (position: number) => {
@@ -78,10 +80,10 @@ export const Ingredients = () => {
 
         setCheckedState(updatedCheckedState);
 
-        const selectedProducts = updatedCheckedState.map((item, index) =>
-            item === true ? allProducts[index] : null
-        ).filter(x => x !== null) as IProduct[];
+        const selectedProducts = updatedCheckedState.map((item, index) => item === true ? allIngredients[index] : null
+        ).filter(x => x !== null) as unknown as string[];
 
+        console.log(selectedProducts)
         setSelectedIngredients(selectedProducts)
 
     };
@@ -93,8 +95,6 @@ export const Ingredients = () => {
         setAllIngredients(response.data.data);
     }
 
-
-    const [searchIngredients, setSearchIngredients] = useState<any>([])
     const searchInputRef = useRef(null);
 
     const toggleSearch = () => {
@@ -126,7 +126,7 @@ export const Ingredients = () => {
     return (
         <div className="profile-container">
             <Menu />
-            <h2>Ingredients:</h2>
+            <h2>My ingredients:</h2>
 
             {ingredients?.map((ingredient: any) => {
                 return (
@@ -136,13 +136,16 @@ export const Ingredients = () => {
                 )
             })}
             <>
-                {loading && !allProducts ?
+                <h2>Lidl Authenticate:</h2>
+                <input type="text" placeholder="phone" />
+                <input type="text" placeholder="password" />
+                {/* {loading && !marketProducts ?
                     <>
                         <p>Loading...</p>
                     </> :
-                    <>
-                        <h2>My Products:</h2>
-                        {allProducts.sort((x, y) => +y.currentUnitPrice - +x.currentUnitPrice).map((product, index) => {
+                    <div className ="market-products">
+                        <h2>Market Products:</h2>
+                        {marketProducts.sort((x, y) => +y.currentUnitPrice - +x.currentUnitPrice).map((product, index) => {
                             return (
                                 <div className="product-checkbox">
                                     <input
@@ -160,12 +163,7 @@ export const Ingredients = () => {
                                 </div>
                             )
                         })}
-                        <button onClick={() => saveIngredients()} className="primary-button">
-                            Save ingredients
-                        </button>
-                    </>}
-
-                <h2>Ingredients:</h2>
+                    </div>} */}
                 <div className={`search-container mt-3 expanded`}>
                     <div className="search-icon">
                         <CgSearch size={23} />
@@ -187,10 +185,13 @@ export const Ingredients = () => {
                         }}
                     />
                 </div>
+                <button onClick={() => saveIngredients()} className="primary-button">
+                    Save ingredients
+                </button>
                 {searchIngredientsLoading
                     ? <p>Loading...</p> :
                     <>
-                        {allIngredients?.map((ingredient: any, index: number) => {
+                        {allIngredients.map((ingredient: any, index: number) => {
                             return (
                                 <div className="tags">
                                     <div className="product-checkbox">
