@@ -10,22 +10,45 @@
     align-items: center;
 
     background: #36D1DC;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #5B86E5, #36D1DC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -webkit-linear-gradient(to right, #4B73E9, #6092F3);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #4B73E9, #6092F3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     
 }
+
+.current-water-streak {
+    display: flex;
+
+}
+
+
 
 .water-events {
     display: flex;
 }
 
 
+
 .water-glass {
     background: #36D1DC;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #5B86E5, #36D1DC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -webkit-linear-gradient(to right, #4B73E9, #6092F3);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #4B73E9, #6092F3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     margin-right: 20px;
     color: white;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.water-glass-empty {
+    background: #fff;
+    border: 1px solid #4B73E9;
+    color: #4B73E9;
+    margin-right: 20px;
     border-radius: 16px;
     display: flex;
     justify-content: center;

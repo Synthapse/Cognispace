@@ -4,10 +4,10 @@ import { LuGlassWater } from "react-icons/lu";
 import { meals } from "./Mealplan";
 import { googleCalendarId } from "./Profile/Calendar";
 import { useEffect, useState } from "react";
-import { addEvent, addMinutesToDate, getSpecificHourDate } from "./utils";
+import { addEvent, addMinutesToDate, findNearestFutureEvents, findPositionsInFirstArray, getSpecificHourDate } from "./utils";
 import Menu from "../components/Menu";
 import { IWaterEvent, auth, readFirebaseUserData, writeWaterStatsData } from "../auth/firebase";
-import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis } from "recharts";
 
 import "../style/water.scss";
 import { DocumentData } from "firebase/firestore";
@@ -83,55 +83,57 @@ const Water = () => {
     }, [])
 
 
-    const findNearestFutureEvent = (events: any[]) => {
-        const currentTime = new Date();
-
-        const futureEvents = events.filter((event) => {
-            if (event.start && event.start.dateTime) {
-                const eventTime = new Date(event.start.dateTime);
-                return eventTime > currentTime; // Only keep events in the future
-            }
-            return false;
-        });
-
-        if (futureEvents.length === 0) {
-            return null; // No future events found
-        }
-
-        const nearestEvent = futureEvents.reduce((nearest, event) => {
-            if (event.start && event.start.dateTime) {
-                const eventTime = new Date(event.start.dateTime);
-                const timeDifference: number = eventTime.getTime() - currentTime.getTime();
-
-                if (timeDifference < nearest.timeDifference) {
-                    return { event, timeDifference };
-                }
-            }
-
-            return nearest;
-        }, { event: null, timeDifference: Infinity });
-
-        return nearestEvent.event;
-    }
-
-
     const todayWater = chartData.find(x => x.name == today)?.amount ?? 0;
+    const currentWaterEvents = findNearestFutureEvents(waterEvents);
+    const todayWaterAmount = chartData.find(x => x.name == today)?.amount ?? 0;
 
-    const currentWaterEvent = findNearestFutureEvent(waterEvents);
-    const hours = currentWaterEvent.start.dateTime.getHours();
-    const minutes = currentWaterEvent.start.dateTime.getMinutes();
+    const fulfillmentStatus = currentWaterEvents.map((event: any, index: number) => {
+        // Retrieve the position for the current event
+        const positions = findPositionsInFirstArray(waterEvents, currentWaterEvents);
+        const position = positions[index];
+
+        // Calculate the accumulated amount up to this event
+        if (!position) {
+            return false;
+        }
+        const accumulatedAmount = position * 250;
+
+        // Check if the event is fulfilled
+        return accumulatedAmount <= todayWaterAmount;
+    });
+
 
     return (
         <div className="profile-container">
             <Menu />
+            Water alerts: 
             <p> Easily log your water consumption and track your progress toward staying adequately hydrated.</p>
-            {hours}:{minutes}
+
+            <div className="current-water-streak">
+                {currentWaterEvents.map((event: any, index: number) => {
+                    const hours = event?.start.dateTime.getHours();
+                    const minutes = event?.start.dateTime.getMinutes();
+
+                    const className = fulfillmentStatus[index] ? "water-glass circle center" : "water-glass-empty circle center";
+
+                    return (
+                        <div>
+                            <div className={className}>
+                                <LuGlassWater size={14} />
+                            </div>
+                            <p>{hours}:{minutes}</p>
+                        </div>
+                    )
+
+                })}
+            </div>
+
 
             <div className="progress-bar-container">
                 <ProgressBar key={"1"} bgcolor={"#6a1b9a"} completed={todayWater * 100 / 2000} />
                 <div onClick={() => uploadWaterAmount()} className="water-glass circle">
                     <div onClick={() => uploadWaterAmount()}>
-                        <LuGlassWater size={14} /> +
+                        +
                     </div>
                 </div>
             </div>
@@ -179,34 +181,50 @@ const DailyWaterChart = ({ initialChartData }: IDailyWaterChart) => {
         amount: x.amount
     }))
 
+    const [isMonthly, setIsMonthly] = useState<boolean>(false)
+
     return (
         <div>
-            <AreaChart width={620} height={320} data={initialDaysData}
-                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                <defs>
-                    <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#5B86E5" stopOpacity={0.8} />
-                        <stop offset="95%" stopColor="#36D1DC" stopOpacity={0.5} />
-                    </linearGradient>
-                    <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#5B86E5" stopOpacity={0.8} />
-                        <stop offset="95%" stopColor="#36D1DC" stopOpacity={0.5} />
-                    </linearGradient>
-                </defs>
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Area type="monotone" dataKey="amount" stroke="#36D1DC" fillOpacity={1} fill="url(#colorUv)" />
-            </AreaChart>
+            {!isMonthly ?
+
+                <BarChart width={620} height={320} data={initialDaysData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="amount" fill="#4B73E9" />
+                </BarChart>
+                :
+                <AreaChart width={620} height={320} data={initialDaysData}
+                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                    <defs>
+                        <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#4B73E9" stopOpacity={0.8} />
+                            <stop offset="95%" stopColor="#4B73E9" stopOpacity={0.5} />
+                        </linearGradient>
+                        <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#4B73E9" stopOpacity={0.8} />
+                            <stop offset="95%" stopColor="#4B73E9" stopOpacity={0.5} />
+                        </linearGradient>
+                    </defs>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Area type="monotone" dataKey="amount" stroke="#4B73E9" fillOpacity={1} fill="url(#colorUv)" />
+                </AreaChart>
+            }
         </div>
     )
 }
+
+
+
 
 const ProgressBar = (props: any) => {
     const { bgcolor, completed } = props;
 
     const containerStyles = {
-        height: 7,
+        height: 4,
         width: '400px',
         backgroundColor: "#e0e0de",
         borderRadius: 50,
@@ -215,7 +233,7 @@ const ProgressBar = (props: any) => {
     const fillerStyles = {
         height: '100%',
         width: `${completed}%`,
-        background: 'linear-gradient(to right, #5B86E5, #36D1DC)',
+        background: 'linear-gradient(to right, #4B73E9, #6092F3)',
         borderRadius: 'inherit',
 
     }
