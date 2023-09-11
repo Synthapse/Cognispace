@@ -60,7 +60,9 @@ export const Ingredients = () => {
 
     useEffect(() => {
         setLoading(true)
-        getProductsFromMarket()
+
+        //
+        //getProductsFromMarket()
         getIngredients()
         fetchUserIngredients()
 

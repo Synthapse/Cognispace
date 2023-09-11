@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 import requests
 from gauth import GoogleAuthenticator
 import routers.lidl as lidl
-
+from typing import List
 
 
 app = FastAPI()
@@ -121,7 +121,7 @@ async def get_recipes_by_meal(meal):
 # To search by both ingredient and recipe name: http://localhost:8000/recipes?ingredient=chicken&recipe_name=pasta
 @app.get("/recipes")
 async def get_recipes_by_criteria(
-    ingredient: str = Query(None, description="Ingredient to search for"),
+    ingredients: List[str] = Query(None, description="List of ingredients to search for"),
     recipe_name: str = Query(None, description="Recipe name to search for")
 ):
     try:
@@ -159,7 +159,8 @@ async def get_recipes_by_criteria(
                 row_ingredient = row[INGREDIENT_COLUMN_INDEX].lower() if INGREDIENT_COLUMN_INDEX < len(row) else ""
                 row_recipe_name = row[RECIPE_NAME_COLUMN_INDEX].lower() if RECIPE_NAME_COLUMN_INDEX < len(row) else ""
 
-                if (ingredient and ingredient.lower() in row_ingredient) or (recipe_name and recipe_name.lower() in row_recipe_name):
+                # Check if any ingredient in the list matches the row
+                if (ingredients and any(ingredient.lower() in row_ingredient for ingredient in ingredients)) or (recipe_name and recipe_name.lower() in row_recipe_name):
 
                     row = {property_name: row[index] for property_name, index in indices.items()} 
                     row["name"] = row["name"].capitalize()
@@ -174,6 +175,8 @@ async def get_recipes_by_criteria(
         if not matching_rows:
             raise HTTPException(status_code=404, detail="No recipes found with the provided criteria.")
         
+        matching_rows.sort(key=lambda x: len(set(ingredients).intersection(set(x['ingredients']))), reverse=True)
+
         return {"recipes": matching_rows}
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
