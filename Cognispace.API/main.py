@@ -169,7 +169,7 @@ async def get_recipes_by_criteria(
                     row["nutrition"] = ast.literal_eval(row["nutrition"])
                     row["steps"] = ast.literal_eval(row["steps"])
                     matching_rows.append(row)
-                    if len(matching_rows) >= 100:  # Break when 100 rows are found
+                    if len(matching_rows) >= 1000:  # Break when 100 rows are found
                         break
         
         if not matching_rows:

@@ -5,6 +5,14 @@ router = APIRouter(
     tags = ['Lidl']
 )
 
+@router.get("/lidlAuthenticate/")
+async def authenticate_lidl(phone, password):
+    print('endpoint')
+    lidl = LidlPlusApi(language="PL", country="pl")
+    print(lidl)
+    login = lidl.login(phone, password, verify_token_func=lambda: input("Insert code: "))
+    print(login)
+
 
 @router.get("/lidlAuth/")
 async def auth_lidl():

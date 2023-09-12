@@ -126,4 +126,24 @@ export const readFirebaseUserData = async (userId: string, collectionName: strin
     }
 }
 
+export const updateFirebaseUserData = async (userId: string, collectionName: string, data: any) => {
+    try {
+        const querySnapshot = await getDocs(
+            query(collection(db, collectionName), where("userId", "==", userId))
+        );
+
+        const docRef = await updateDoc(doc(db, collectionName, querySnapshot.docs[0].id), {
+            userId: userId,
+            ingredients: data
+        });
+        console.log("Document updated with ID: ", docRef);
+        
+        return docRef;
+    }
+    catch (error) {
+        console.log("Error getting documents: ", error);
+        throw error; // Re-throw the error to be caught by the caller if needed
+    }
+}
+
 
