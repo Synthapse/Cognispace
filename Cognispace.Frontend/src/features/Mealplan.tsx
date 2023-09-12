@@ -10,8 +10,6 @@ import config from "../config.json"
 import { Tag } from "../components/Tag";
 import Menu from "../components/Menu";
 import RecipeListItem from "../components/RecipeListItem";
-
-import Switch from '@mui/material/Switch';
 import React from "react";
 import { auth, readFirebaseUserData } from "../auth/firebase";
 
