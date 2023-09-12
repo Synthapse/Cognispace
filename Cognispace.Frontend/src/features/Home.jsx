@@ -1,4 +1,3 @@
-import React from 'react';
 import '../style/Home.css';
 import { useNavigate } from 'react-router-dom';
 import heroImage from '../media/autonomousagents.svg';
@@ -21,7 +20,7 @@ const Home = () => {
           </div>
           <div className="container">
             <div className="row title-one">
-              <div className="col">Autonomous space<br/>
+              <div className="col">Autonomous space<br />
                 for cognitive AI agents.</div>
             </div>
             <div className="row mt-4 links">
