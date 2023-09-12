@@ -106,7 +106,7 @@ const Water = () => {
     return (
         <div className="profile-container">
             <Menu />
-            Water alerts: 
+            Water alerts:
             <p> Easily log your water consumption and track your progress toward staying adequately hydrated.</p>
 
             <div className="current-water-streak">
@@ -181,20 +181,45 @@ const DailyWaterChart = ({ initialChartData }: IDailyWaterChart) => {
         amount: x.amount
     }))
 
-    const [isMonthly, setIsMonthly] = useState<boolean>(false)
+
+    const tabs = [
+        {
+            name: "Weekly",
+        }
+        ,
+        {
+            name: "Monthly",
+        }
+
+    ]
+
+    const [activeTab, setActiveTab] = useState<string>(tabs[0].name)
+
+
 
     return (
         <div>
-            {!isMonthly ?
+            <div className="tabs">
+                {tabs.map((tab, index) => {
+                    return (
+                        <div key={index} className={activeTab == tab.name ? 'tab active' : 'tab'} onClick={() => setActiveTab(tab.name)}>
+                            <p>{tab.name}</p>
+                        </div>
+                    )
+                }
+                )}
+            </div>
+            {activeTab == tabs[0].name &&
 
-                <BarChart width={620} height={320} data={initialDaysData}>
+                <BarChart width={620} height={320} data={initialDaysData.slice(-7)}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip />
                     <Bar dataKey="amount" fill="#4B73E9" />
                 </BarChart>
-                :
+            }
+            {activeTab == tabs[1].name &&
                 <AreaChart width={620} height={320} data={initialDaysData}
                     margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                     <defs>
@@ -212,6 +237,7 @@ const DailyWaterChart = ({ initialChartData }: IDailyWaterChart) => {
                     <Tooltip />
                     <Area type="monotone" dataKey="amount" stroke="#4B73E9" fillOpacity={1} fill="url(#colorUv)" />
                 </AreaChart>
+
             }
         </div>
     )

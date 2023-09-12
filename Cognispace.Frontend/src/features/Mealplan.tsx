@@ -12,6 +12,7 @@ import Menu from "../components/Menu";
 import RecipeListItem from "../components/RecipeListItem";
 import React from "react";
 import { auth, readFirebaseUserData } from "../auth/firebase";
+import { BsSortUp, BsSortDown } from "react-icons/bs";
 
 export interface IMeal {
   id: number;
@@ -70,6 +71,10 @@ const Mealplan = () => {
   const isAfter = (hour: number) => {
     return targetTime.setHours(hour, 0, 0, 0) < currentDateTime.getTime();
   };
+
+  useEffect(() => {
+    console.log('test')
+  }, [recipes])
 
 
   return (
@@ -133,7 +138,15 @@ const Search = ({ setRecipes, recipes }: ISearch) => {
   const [ingredientsFilter, setIngredientsFilter] = useState("");
 
 
+  const sortBySimplicity = () => {
+    setRecipes(recipes.sort((a: IRecipe, b: IRecipe) => a.ingredients.length - b.ingredients.length))
+    setRecipes(recipes.filter((x: IRecipe) => x))
+  }
 
+  const sortByTime = () => {
+    setRecipes(recipes.sort((a: IRecipe, b: IRecipe) => +a.minutes - +b.minutes))
+    setRecipes(recipes.filter((x: IRecipe) => x))
+  }
 
   const [expanded, setExpanded] = useState(false);
   const toggleSearch = () => {
@@ -208,14 +221,8 @@ const Search = ({ setRecipes, recipes }: ISearch) => {
         `${config.apps.CognispaceAPI.url}/recipes?${queryString}`
       );
 
-
-
-
       setRecipes(response.data.recipes);
       setTags(Array.from(new Set(response.data.recipes.flatMap((x: { tags: string; }) => x.tags))))
-
-
-
 
     } catch (error) {
       setError("Error fetching recipes");
@@ -227,7 +234,6 @@ const Search = ({ setRecipes, recipes }: ISearch) => {
   const [userIngredients, setUserIngredients] = useState([])
 
   const fetchUserIngredients = async () => {
-    console.log(auth.currentUser);
     if (auth.currentUser) {
       try {
         const ingredients = await readFirebaseUserData(auth.currentUser.uid, "ingredients");
@@ -244,6 +250,8 @@ const Search = ({ setRecipes, recipes }: ISearch) => {
   useEffect(() => {
     fetchUserIngredients();
   }, [])
+
+
 
   const [useUserIngredients, setUseUserIngredients] = React.useState(false);
 
@@ -302,7 +310,6 @@ const Search = ({ setRecipes, recipes }: ISearch) => {
       {showFilters && (
         <>
           <div className={`filter-options`}>
-            {/* <Switch label={"Include ingredients"} /> */}
 
             <label>
               <input
@@ -337,6 +344,14 @@ const Search = ({ setRecipes, recipes }: ISearch) => {
             <button className="apply-filters-btn" onClick={applyFilters}>
               Apply Filters
             </button>
+            <div onClick={() => sortBySimplicity()}>
+              <BsSortUp size={23} />
+              Sort by simplicity
+            </div>
+            <div onClick={() => sortByTime()}>
+              <BsSortUp size={23} />
+              Sort by Time
+            </div>
           </div>
         </>
       )
