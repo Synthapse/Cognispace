@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  API_URL: ""
+  API_URL: "https://cognispace-ukddwnxkhq-lm.a.run.app"
   Domain: 'Cognispace.io'
   BUCKET: 'cognispace'
   ENVIRONMENT: true
