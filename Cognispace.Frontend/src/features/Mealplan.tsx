@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import "../style/Mealplan.scss";
 import { IRecipe } from "./Meal";
 import { BsFilter } from "react-icons/bs";
-
 import config from "../config.json"
 import { Tag } from "../components/Tag";
 import Menu from "../components/Menu";

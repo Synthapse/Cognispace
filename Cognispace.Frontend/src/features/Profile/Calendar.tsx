@@ -36,8 +36,6 @@ export const Calendar = () => {
 
     const getAccessToken = () => {
 
-        console.log('getiing access token...')
-
         gapi?.auth2?.authorize({
             client_id: clientId,
             scope: scopes,

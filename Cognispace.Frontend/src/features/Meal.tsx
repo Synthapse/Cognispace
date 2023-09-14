@@ -1,6 +1,4 @@
-import React, { useState, useRef } from 'react';
-import { CgSearch } from 'react-icons/cg';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import '../style/Meal.css';
 import useFetch from '../hooks/useFetch';
 import RecipeListItem from '../components/RecipeListItem';
