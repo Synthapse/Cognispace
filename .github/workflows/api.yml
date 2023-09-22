@@ -26,8 +26,6 @@ jobs:
           lfs: true
  
       - run: git lfs pull
-        with:
-          context: .
 
       - name: Replace Environment Variables in File
         env:
