@@ -22,7 +22,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        
+        with:
+          lfs: true
+ 
+      - run: git lfs pull
+        with:
+          context: .
+
       - name: Replace Environment Variables in File
         env:
           REPLACEMENTS: |
