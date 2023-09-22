@@ -17,4 +17,8 @@ ____
 
 Getting large file from repository:
 
+Note:
+There is issue that CI / CD process not save git lfs files.
+
+
 git lfs fetch --all
