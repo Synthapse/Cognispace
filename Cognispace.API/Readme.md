@@ -10,3 +10,11 @@ https://medium.com/@murtuza753/using-llama-2-0-faiss-and-langchain-for-question-
 ____
 
 huggingface-cli login
+
+
+
+____
+
+Getting large file from repository:
+
+git lfs fetch --all
