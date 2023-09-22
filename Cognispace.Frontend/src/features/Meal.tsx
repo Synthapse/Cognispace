@@ -2,6 +2,7 @@ import { useLocation } from 'react-router-dom';
 import '../style/Meal.css';
 import useFetch from '../hooks/useFetch';
 import RecipeListItem from '../components/RecipeListItem';
+import config from '../config.json';
 
 export interface IRecipe {
   name: string;
@@ -23,7 +24,7 @@ const Meal = () => {
 
   const location = useLocation();
 
-  const url = `http://localhost:8000/recipesByMeal?meal=${location.state.meal}`
+  const url = `${config.apps.CognispaceAPI.url}/recipesByMeal?meal=${location.state.meal}`
   const { data, error } = useFetch(url)
 
   return (

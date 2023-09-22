@@ -3,6 +3,7 @@ FROM python:3.9-slim
 WORKDIR /
 
 COPY ./requirements.txt /requirements.txt
+COPY ./data/RAW_recipes.csv /data/RAW_recipes.csv
 
 RUN pip install --upgrade pip
 
