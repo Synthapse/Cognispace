@@ -5,7 +5,7 @@ WORKDIR /
 COPY ./requirements.txt /requirements.txt
 
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
-RUN apt-get install -y git-lfs
+RUN apt-get update && apt-get install -y git-lfs
 RUN git lfs pull -I data/RAW_recipes.csv
 RUN pip install --upgrade pip
 
