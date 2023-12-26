@@ -12,6 +12,8 @@ import './style/main.scss';
 import { ImSun } from 'react-icons/im';
 import { Calendar } from './features/Profile/Calendar';
 import React from 'react';
+import { Hydration } from './containers/Hydration';
+import Water from './containers/Water';
 
 export const ThemeContext = React.createContext('light');
 
@@ -44,6 +46,11 @@ function App() {
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/recipe" element={<Recipe />} />
+
+
+            <Route path="/hydration" element={<Hydration />} />
+            <Route path="/water" element={<Water />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </HashRouter>
       </ThemeContext.Provider>
