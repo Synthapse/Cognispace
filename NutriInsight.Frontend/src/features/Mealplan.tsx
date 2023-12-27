@@ -64,6 +64,10 @@ const Mealplan = () => {
     navigate("/meal", { state: { meal: meal } });
   };
 
+  const navigateToPage = (page: string) => {
+    navigate(page);
+  }
+
   const currentDateTime = new Date();
   const targetTime = new Date();
 
@@ -98,7 +102,7 @@ const Mealplan = () => {
             </button> */}
           <div className="days-navigation">
             <p>Today</p>
-            <div className="ms-5 section-2">Tomorrow</div>
+            <div onClick={() => navigateToPage("/hydration")} className="ms-5 section-2">Water</div>
           </div>
 
           <ul className="list-unstyled mt-5">
@@ -250,6 +254,10 @@ const Search = ({ setRecipes, recipes }: ISearch) => {
     fetchUserIngredients();
   }, [])
 
+
+  const navigateToHydration = () => {
+    window.location.href = '/#hydration'
+  }
 
 
   const [useUserIngredients, setUseUserIngredients] = React.useState(false);

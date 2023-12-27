@@ -4,6 +4,7 @@ import { getAnalytics } from "firebase/analytics";
 import config from "../config.json";
 import { doc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore";
+import { IProfileData } from "../containers/Wizzard/utils";
 
 const firebaseConfig = {
     apiKey: config.apps.Firebase.apiKey,
@@ -26,7 +27,6 @@ export const googleProvider = new GoogleAuthProvider();
 
 
 const db = getFirestore(app);
-
 
 interface IIngredientsEvent {
     userId: string;
@@ -113,7 +113,7 @@ export const writeWaterStatsData = async (data: IWaterEvent) => {
     }
 }
 
-export const readFirebaseUserData = async (userId: string, collectionName: string) => {
+export const readFirebaseUserData = async (userId: string | undefined, collectionName: string) => {
     try {
         const querySnapshot = await getDocs(
             query(collection(db, collectionName), where("userId", "==", userId))
@@ -125,24 +125,76 @@ export const readFirebaseUserData = async (userId: string, collectionName: strin
         throw error; // Re-throw the error to be caught by the caller if needed
     }
 }
-
 export const updateFirebaseUserData = async (userId: string, collectionName: string, data: any) => {
     try {
         const querySnapshot = await getDocs(
             query(collection(db, collectionName), where("userId", "==", userId))
-    );
+        );
 
         const docRef = await updateDoc(doc(db, collectionName, querySnapshot.docs[0].id), {
             userId: userId,
             ingredients: data
         });
         console.log("Document updated with ID: ", docRef);
-        
+
         return docRef;
     }
     catch (error) {
         console.log("Error getting documents: ", error);
         throw error; // Re-throw the error to be caught by the caller if needed
+    }
+}
+
+export interface IWaterEvent {
+    userId: string;
+    type: string;
+    amount: number;
+    date: string;
+}
+
+
+
+export interface IDrinkEvent {
+    type: string;
+    amount: number;
+}
+
+export interface IDailyDrinks {
+    userId: string;
+    date: string;
+    drinks: IDrinkEvent[];
+}
+
+export const writeUserProfileData = async (userId: any, profileDetailsData: IProfileData) => {
+
+    const collectionName = "userProfile";
+
+    try {
+        // Query to check if a document with the same userId and date  and already exists
+        const querySnapshot = await getDocs(
+            query(collection(db, collectionName),
+                where("userId", "==", userId)
+            )
+        );
+
+        if (querySnapshot.empty) {
+            // No matching document found, add the new document
+            const docRef = await addDoc(collection(db, collectionName), {
+                userId: userId,
+                profileData: profileDetailsData
+            });
+            console.log("Document written with ID: ", docRef.id);
+        } else {
+            console.log("Duplicate document not added.");
+
+            const docRef = await updateDoc(doc(db, collectionName, querySnapshot.docs[0].id), {
+                userId: userId,
+                profileData: profileDetailsData
+            });
+            console.log("Document updated with ID: ", docRef);
+        }
+    } catch (e) {
+        console.error("Error adding document: ", e);
     }
 }
 

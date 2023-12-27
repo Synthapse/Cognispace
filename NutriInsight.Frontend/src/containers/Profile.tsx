@@ -3,7 +3,7 @@ import { signOut } from "firebase/auth";
 import Menu from '../components/Menu';
 import { auth, readFirebaseUserData } from '../auth/firebase';
 import { Container, WaterGlass } from "./Water";
-import { calculateLongestConsecutiveStreak } from "../utils";
+import { calculateLongestConsecutiveStreak } from "../../src/utils";
 import { DocumentData } from "firebase/firestore";
 import styled from "styled-components";
 import { PrimaryButton } from "../App";

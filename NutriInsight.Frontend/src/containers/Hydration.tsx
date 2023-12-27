@@ -1,12 +1,11 @@
 import { ProgressBar } from "../charts/ProgressBar";
 import { LuGlassWater } from "react-icons/lu";
-import { addEvent, addMinutesToDate, findNearestFutureEvents, findPositionsInFirstArray, getSpecificHourDate } from "../utils";
-import { IDailyDrinks, IDrinkEvent, auth, readFirebaseUserData, writeWaterStatsData } from "../auth/firebase";
+import { addMinutesToDate, findNearestFutureEvents, findPositionsInFirstArray, getSpecificHourDate } from "../../src/utils";
+import { IDrinkEvent, auth, readFirebaseUserData, writeWaterStatsData } from "../auth/firebase";
 import { useEffect, useState } from "react";
 import { Container, CurrentWaterStreak, DrinkTypes, ProgressBarContainer, WaterGlass, WaterGlassEmpty, googleCalendarId } from "./Water";
 import { DocumentData } from "firebase/firestore";
 import styled from "styled-components";
-import { AiOutlineInfoCircle } from "react-icons/ai";
 import { Tooltip } from "react-tooltip";
 import { IGraphWaterEvent } from "../charts/DailyDrinksChart";
 import Menu from "../components/Menu";
@@ -102,7 +101,6 @@ export const Hydration = () => {
             const userId = auth.currentUser.uid;
             const date = new Date().toISOString().split('T')[0];
 
-
             const drinks: IDrinkEvent[] = drinksStats.dates.find((x: { date: string; }) => x.date === today)?.drinks ?? [];
             const existingDrinkEvent = drinks.find(x => x.type === drinkType);
 
@@ -116,7 +114,7 @@ export const Hydration = () => {
                 drinks.push(drinkEvent);
             }
 
-            const drinksDates: IDrinksDates = {
+            const drinksDates: any = {
                 userId: userId,
                 dates:
                     (drinksStats.dates.some((entry: { date: string; }) => entry.date === date)
@@ -175,12 +173,17 @@ export const Hydration = () => {
     });
 
     const readDrinksStats = async () => {
+
         const waterStats = await readFirebaseUserData(auth?.currentUser?.uid ?? "", "drinkstats")
+
+        console.log(waterStats)
 
         const stats = waterStats[0].dates.map((x: DocumentData) => ({
             name: x.date,
             drinks: x.drinks
         }))
+
+        console.log('stats', stats);
 
         setDrinksStats(waterStats[0])
         setChartData(stats.sort((a: IGraphWaterEvent, b: IGraphWaterEvent) => new Date(a.name).getTime() - new Date(b.name).getTime()))

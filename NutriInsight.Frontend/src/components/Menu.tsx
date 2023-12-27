@@ -56,7 +56,7 @@ const Menu = () => {
     <ThemeContext.Consumer>
       {theme => (
         <MenuContainer className={`menu ${theme}`}>
-          <MenuItem onClick={() => navigateToPage("/hydration")} >
+          <MenuItem onClick={() => navigateToPage("/mealplan")} >
             <p><GiWaterBottle style={{ fontSize: iconSize }} data-tooltip-id="tooltip-hydration" /></p>
             <Tooltip id="tooltip-hydration"
               place="right"

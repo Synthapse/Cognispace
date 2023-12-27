@@ -1,4 +1,4 @@
-import { AnalysisSummary, analyzeDrinksData } from "../utils";
+import { AnalysisSummary, analyzeDrinksData } from "../../src/utils";
 import { IGraphWaterEvent } from "./DailyDrinksChart";
 
 interface IAnalysisDailyGraph {
