@@ -41,18 +41,28 @@ export const Profile = () => {
     const readDrinksStats = async () => {
 
         const waterStats = await readFirebaseUserData(auth?.currentUser?.uid ?? "", "drinkstats")
-        const sortedWaterStats = waterStats[0].dates.sort((a: DocumentData, b: DocumentData) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        const streak = calculateLongestConsecutiveStreak(sortedWaterStats.map((x: { date: any; }) => x.date));
-        setStreaks([streak[0], streak[1]]);
+
+        console.log(waterStats);
+
+
+        // const sortedWaterStats = waterStats[0].dates.sort((a: DocumentData, b: DocumentData) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        // const streak = calculateLongestConsecutiveStreak(sortedWaterStats.map((x: { date: any; }) => x.date));
+        // setStreaks([streak[0], streak[1]]);
     }
 
     const readProfileData = async () => {
+
+        console.log(auth.currentUser?.uid)
+
         const profileData = await readFirebaseUserData(auth?.currentUser?.uid, "userProfile");
+
+        console.log(profileData);
+
         setProfileData(profileData[0].profileData)
     }
 
     useEffect(() => {
-        readDrinksStats()
+        //readDrinksStats()
         readProfileData()
     }, [setWizzardProcessing])
 

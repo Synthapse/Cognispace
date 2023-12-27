@@ -115,9 +115,17 @@ export const writeWaterStatsData = async (data: IWaterEvent) => {
 
 export const readFirebaseUserData = async (userId: string | undefined, collectionName: string) => {
     try {
+
+        console.log(userId)
+        console.log(collectionName)
+
         const querySnapshot = await getDocs(
             query(collection(db, collectionName), where("userId", "==", userId))
         );
+        
+        console.log(querySnapshot);
+
+
         const newData = querySnapshot.docs.map((doc) => doc.data());
         return newData;
     } catch (error) {

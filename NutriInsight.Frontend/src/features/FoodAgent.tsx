@@ -1,11 +1,27 @@
 import { useState, useEffect } from 'react';
-import '../style/Home.css';
 import { useNavigate } from 'react-router-dom';
-import heroImage from '../media/heroimage.svg';
+import logo from '../logo.svg';
+import heroImage from '../../src/media/hero.jpg';
 import { signInWithPopup } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
 import { auth, googleProvider } from "../auth/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import styled from 'styled-components';
+
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20px;
+`
+
+const TextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 20px 0;
+`
+
 
 const FoodAgent = () => {
 
@@ -36,54 +52,45 @@ const FoodAgent = () => {
 
 
   return (
-    <div className="container-fluid main">
-      <div className="row">
-        <div className="col-md-7">
-          <div className="row logo">
-            <div className="col">COGNISPACE</div>
+    <MainContainer>
+
+
+      <TextContainer>
+        <img src={logo} className="App-logo" alt="logo" />
+        <h2>Welcome in NutriInsight!</h2>
+        <h1>Savor the Symphony of Nature</h1>
+        <p>Elevate Your Tastebuds with Our Premium
+          Natural Agriculture Food and Water</p>
+        {!user ? (
+          <div className="sign-up" onClick={() => signInWithGoogle()} style={{ display: "flex" }}>
+            <FcGoogle style={{ fontSize: '18px' }} /><p>Sign up</p>
           </div>
-          <div className="container">
-            <div className="row title-one">
-              <div className="col">Food tastes better together</div>
-            </div>
-            <div className="row mt-4 links">
-              <div className="col">
-                <div className="user-profile">
-                  {!user ? (
-                    <div className="sign-up" onClick={() => signInWithGoogle()} style={{ display: "flex" }}>
-                      <FcGoogle style={{ fontSize: '18px' }} /><p>Sign up</p>
-                    </div>
-                  ) : (
-                    <div className="user-info" onClick={() => navigateToProfile()}>
-                      <div className="user-image">
-                        {auth?.currentUser?.photoURL ? (
-                          <img
-                            src={auth?.currentUser?.photoURL ?? ""}
-                            alt="User Profile"
-                          />
-                        ) : (
-                          <div className="default-user-image">
-                            <p>{auth?.currentUser?.email?.charAt(0).toUpperCase()}</p>
-                          </div>
-                        )}
-                      </div>
-                      <div className="user-details">
-                        <h5 className="user-name">{auth?.currentUser?.displayName}</h5>
-                        <p className="user-email">{auth?.currentUser?.email}</p>
-                        <button className="logout-button">
-                          View Profile
-                        </button>
-                      </div>
-                    </div>
-                  )}
+        ) : (
+          <div className="user-info" onClick={() => navigateToProfile()}>
+            <div className="user-image">
+              {auth?.currentUser?.photoURL ? (
+                <img
+                  src={auth?.currentUser?.photoURL ?? ""}
+                  alt="User Profile"
+                />
+              ) : (
+                <div className="default-user-image">
+                  <p>{auth?.currentUser?.email?.charAt(0).toUpperCase()}</p>
                 </div>
-              </div>
+              )}
+            </div>
+            <div className="user-details">
+              <h5 className="user-name">{auth?.currentUser?.displayName}</h5>
+              <p className="user-email">{auth?.currentUser?.email}</p>
+              <button className="logout-button">
+                View Profile
+              </button>
             </div>
           </div>
-        </div>
-        <img className="hero-image" src={heroImage} />
-      </div>
-    </div>
+        )}
+      </TextContainer>
+      <img className="hero-image" src={heroImage} />
+    </MainContainer>
   );
 };
 

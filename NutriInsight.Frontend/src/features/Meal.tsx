@@ -1,5 +1,4 @@
 import { useLocation } from 'react-router-dom';
-import '../style/Meal.css';
 import useFetch from '../hooks/useFetch';
 import RecipeListItem from '../components/RecipeListItem';
 import config from '../config.json';

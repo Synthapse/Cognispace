@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, HashRouter } from 'react-router-dom'; // Import BrowserRouter, Route, and Routes components
-import Home from './features/Home';
 import Mealplan from './features/Mealplan';
 import Meal from './features/Meal';
 import Chat from './features/Chat';
@@ -121,8 +120,7 @@ function App() {
         <div style={{ position: 'absolute', right: 20 }}><ImSun style={{ fontSize: '24px' }} onClick={toggleTheme}>Toggle Theme</ImSun></div>
         <HashRouter>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/food" element={<FoodAgent />} />
+            <Route path="/" element={<FoodAgent />} />
             <Route path="/mealplan" element={<Mealplan />} />
             <Route path="/meal" element={<Meal />} />
             <Route path="/ingredients" element={<Ingredients />} />
