@@ -29,13 +29,13 @@ const ProfileWizzard = ({ profileData, setWizzardProcessing }: IProfileWizzard) 
     const [activeProgress, setActiveProgress] = useState(0);
     const [profileDetailsData, setProfileDetailsData] = useState<IProfileData>({
         basicInformation: {
-            age: profileData.basicInformation.age ?? 0,
-            gender: profileData.basicInformation.gender ?? "male",
-            weight: profileData.basicInformation.weight ?? 0,
+            age: profileData?.basicInformation.age ?? 0,
+            gender: profileData?.basicInformation.gender ?? "male",
+            weight: profileData?.basicInformation.weight ?? 0,
         },
-        activityLevel: profileData.activityLevel ?? "",
-        preferableDrink: profileData.preferableDrink ?? "",
-        goals: profileData.goals ?? []
+        activityLevel: profileData?.activityLevel ?? "",
+        preferableDrink: profileData?.preferableDrink ?? "",
+        goals: profileData?.goals ?? []
     })
 
 

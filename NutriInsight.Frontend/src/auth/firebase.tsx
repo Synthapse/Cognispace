@@ -5,6 +5,7 @@ import config from "../config.json";
 import { doc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore";
 import { IProfileData } from "../containers/Wizzard/utils";
+import { IGraphWaterEvent } from "../charts/DailyDrinksChart";
 
 const firebaseConfig = {
     apiKey: config.apps.Firebase.apiKey,
@@ -71,14 +72,15 @@ export const writeIngredientsData = async (data: IIngredientsEvent) => {
 
 export interface IWaterEvent {
     userId: string;
-    amount: number;
-    date: string;
+    dates: IGraphWaterEvent[];
 }
 
-export const writeWaterStatsData = async (data: IWaterEvent) => {
-    const { userId, date } = data;
+export const writeWaterStatsData = async (data: any) => {
+    const { userId, dates } = data;
 
-    const collectionName = "waterstats";
+    const collectionName = "drinkstats";
+
+    console.log('test')
 
 
     try {
@@ -86,16 +88,15 @@ export const writeWaterStatsData = async (data: IWaterEvent) => {
         const querySnapshot = await getDocs(
             query(collection(db, collectionName),
                 where("userId", "==", userId),
-                where("date", "==", date)
+                where("date", "==", dates[0].date)
             )
         );
 
         if (querySnapshot.empty) {
             // No matching document found, add the new document
             const docRef = await addDoc(collection(db, collectionName), {
-                userId: data.userId,
-                amount: data.amount,
-                date: data.date
+                userId: userId,
+                dates: dates
             });
             console.log("Document written with ID: ", docRef.id);
         } else {
@@ -104,7 +105,7 @@ export const writeWaterStatsData = async (data: IWaterEvent) => {
             const docRef = await updateDoc(doc(db, collectionName, querySnapshot.docs[0].id), {
                 userId: data.userId,
                 amount: data.amount,
-                date: data.date
+                date: dates[0].date
             });
             console.log("Document updated with ID: ", docRef);
         }
@@ -116,16 +117,15 @@ export const writeWaterStatsData = async (data: IWaterEvent) => {
 export const readFirebaseUserData = async (userId: string | undefined, collectionName: string) => {
     try {
 
-        console.log(userId)
-        console.log(collectionName)
-
         const querySnapshot = await getDocs(
             query(collection(db, collectionName), where("userId", "==", userId))
         );
+
+        if (querySnapshot.empty) {
+            console.log("No matching documents.");
+            return;
+        }
         
-        console.log(querySnapshot);
-
-
         const newData = querySnapshot.docs.map((doc) => doc.data());
         return newData;
     } catch (error) {

@@ -11,15 +11,46 @@ import styled from 'styled-components';
 const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
-  padding: 20px;
+  align-items: flex-start;
+
+  h1 {
+    color: #005F80;
+    padding: 0;
+    margin: 18px 0 18px 0;
+  }
+
+  h2 {
+    color: #4DAED0;
+    padding: 0;
+    margin: 32px 0 0px 0;
+  }
+
+  p {
+    color: #005F80;
+    padding: 0;
+    margin: 0;
+  }
+`
+
+const PresentationContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 60%;
+  padding: 0 0 0 18px;
 `
 
 const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin: 20px 0;
+  margin-top: 10vh;
+`
+
+const MainImage = styled.img`
+  width: 40%;
+  height: 100vh;
+  object-fit: cover;
 `
 
 
@@ -30,7 +61,7 @@ const FoodAgent = () => {
 
   const signInWithGoogle = async () => {
     try {
-      const test = await signInWithPopup(auth, googleProvider);
+      await signInWithPopup(auth, googleProvider);
     } catch (err) {
       console.error(err);
     }
@@ -54,42 +85,43 @@ const FoodAgent = () => {
   return (
     <MainContainer>
 
-
-      <TextContainer>
+      <PresentationContainer>
         <img src={logo} className="App-logo" alt="logo" />
-        <h2>Welcome in NutriInsight!</h2>
-        <h1>Savor the Symphony of Nature</h1>
-        <p>Elevate Your Tastebuds with Our Premium
-          Natural Agriculture Food and Water</p>
-        {!user ? (
-          <div className="sign-up" onClick={() => signInWithGoogle()} style={{ display: "flex" }}>
-            <FcGoogle style={{ fontSize: '18px' }} /><p>Sign up</p>
-          </div>
-        ) : (
-          <div className="user-info" onClick={() => navigateToProfile()}>
-            <div className="user-image">
-              {auth?.currentUser?.photoURL ? (
-                <img
-                  src={auth?.currentUser?.photoURL ?? ""}
-                  alt="User Profile"
-                />
-              ) : (
-                <div className="default-user-image">
-                  <p>{auth?.currentUser?.email?.charAt(0).toUpperCase()}</p>
-                </div>
-              )}
+        <TextContainer>
+          <h2>Welcome in NutriInsight!</h2>
+          <h1>Savor the Symphony of Nature</h1>
+          <p>Elevate Your Tastebuds with Our Premium
+            Natural Agriculture Food and Water</p>
+          {!user ? (
+            <div className="sign-up" onClick={() => signInWithGoogle()} style={{ display: "flex" }}>
+              <FcGoogle style={{ fontSize: '18px' }} /><p>Sign up</p>
             </div>
-            <div className="user-details">
-              <h5 className="user-name">{auth?.currentUser?.displayName}</h5>
-              <p className="user-email">{auth?.currentUser?.email}</p>
-              <button className="logout-button">
-                View Profile
-              </button>
+          ) : (
+            <div className="user-info" onClick={() => navigateToProfile()}>
+              <div className="user-image">
+                {auth?.currentUser?.photoURL ? (
+                  <img
+                    src={auth?.currentUser?.photoURL ?? ""}
+                    alt="User Profile"
+                  />
+                ) : (
+                  <div className="default-user-image">
+                    <p>{auth?.currentUser?.email?.charAt(0).toUpperCase()}</p>
+                  </div>
+                )}
+              </div>
+              <div className="user-details">
+                <h5 className="user-name">{auth?.currentUser?.displayName}</h5>
+                <p className="user-email">{auth?.currentUser?.email}</p>
+                <button className="logout-button">
+                  View Profile
+                </button>
+              </div>
             </div>
-          </div>
-        )}
-      </TextContainer>
-      <img className="hero-image" src={heroImage} />
+          )}
+        </TextContainer>
+      </PresentationContainer>
+      <MainImage src={heroImage} />
     </MainContainer>
   );
 };

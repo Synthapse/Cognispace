@@ -101,6 +101,25 @@ export const Hydration = () => {
             const userId = auth.currentUser.uid;
             const date = new Date().toISOString().split('T')[0];
 
+            if (!drinksStats || drinksStats.length === 0) {
+
+                console.log('new user');
+
+                const drinksDates: any = {
+                    userId: userId,
+                    dates:
+                        [{ date: new Date().toISOString().split('T')[0], 
+                           drinks: [{ type: drinkType, amount }] }]
+                };
+
+                writeWaterStatsData(drinksDates).then(() => {
+                    readDrinksStats();
+                });
+
+                return null
+
+            }
+
             const drinks: IDrinkEvent[] = drinksStats.dates.find((x: { date: string; }) => x.date === today)?.drinks ?? [];
             const existingDrinkEvent = drinks.find(x => x.type === drinkType);
 
@@ -176,14 +195,15 @@ export const Hydration = () => {
 
         const waterStats = await readFirebaseUserData(auth?.currentUser?.uid ?? "", "drinkstats")
 
-        console.log(waterStats)
+        if (!waterStats) {
+            return null
+        }
 
         const stats = waterStats[0].dates.map((x: DocumentData) => ({
             name: x.date,
             drinks: x.drinks
         }))
 
-        console.log('stats', stats);
 
         setDrinksStats(waterStats[0])
         setChartData(stats.sort((a: IGraphWaterEvent, b: IGraphWaterEvent) => new Date(a.name).getTime() - new Date(b.name).getTime()))

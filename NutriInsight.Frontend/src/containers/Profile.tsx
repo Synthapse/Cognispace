@@ -8,6 +8,7 @@ import { DocumentData } from "firebase/firestore";
 import styled from "styled-components";
 import { PrimaryButton } from "../App";
 import ProfileWizzard from "./Wizzard/ProfileWizzard";
+import { redirect, useNavigate } from "react-router-dom";
 
 
 const Streaks = styled.div`
@@ -23,6 +24,7 @@ const Streak = styled.div`
 
 export const Profile = () => {
 
+    const navigate = useNavigate();
     const [user, setUser] = useState(auth.currentUser);
     const [profileData, setProfileData] = useState<any>();
     const [wizzardProcessing, setWizzardProcessing] = useState<boolean>(false);
@@ -32,6 +34,7 @@ export const Profile = () => {
         try {
             await signOut(auth);
             setUser(null);
+            navigate("/");
         } catch (error) {
             console.error("Error signing out:", error);
         }
@@ -51,14 +54,14 @@ export const Profile = () => {
     }
 
     const readProfileData = async () => {
-
-        console.log(auth.currentUser?.uid)
-
         const profileData = await readFirebaseUserData(auth?.currentUser?.uid, "userProfile");
 
-        console.log(profileData);
-
-        setProfileData(profileData[0].profileData)
+        if (!profileData){
+            return null
+        }
+        else{
+            setProfileData(profileData[0].profileData)
+        }
     }
 
     useEffect(() => {

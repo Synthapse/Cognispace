@@ -4,8 +4,6 @@ import { IRecipe } from "../features/Meal";
 import { BsBarChartSteps } from "react-icons/bs";
 import { PiBowlFood } from "react-icons/pi";
 import { Tag } from "./Tag";
-
-import "./listitem.scss"
 import { googleCalendarId } from "../features/Profile/Calendar";
 import { addEvent, addMinutesToDate, getSpecificHourDate } from "../features/utils";
 import { meals } from "../features/Mealplan";

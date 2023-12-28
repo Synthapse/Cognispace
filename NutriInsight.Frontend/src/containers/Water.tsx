@@ -163,6 +163,10 @@ const Water = () => {
     const readDrinksStats = async () => {
         const waterStats = await readFirebaseUserData(auth?.currentUser?.uid ?? "", "drinkstats")
 
+        if (!waterStats) {
+            return null
+        }
+
         const stats = waterStats[0].dates.map((x: DocumentData) => ({
             name: x.date,
             drinks: x.drinks
