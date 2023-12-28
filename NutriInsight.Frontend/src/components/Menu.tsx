@@ -4,6 +4,7 @@ import { CgProfile } from 'react-icons/cg';
 import { FaWater } from 'react-icons/fa';
 import { GiWaterBottle } from 'react-icons/gi'
 import { Tooltip } from "react-tooltip";
+import { PiBowlFood } from 'react-icons/pi';
 
 const MenuContainer = styled.div`
   height: 100%;
@@ -70,6 +71,14 @@ const Menu = () => {
               content={"Drinks analysis"}
             />
           </MenuItem>
+
+          <MenuItem data-tooltip-id="tooltip-fridge" onClick={() => navigateToPage("/ingredients")} >
+            <p><PiBowlFood style={{ fontSize: iconSize }} /></p>
+            <Tooltip id="tooltip-fridge"
+              place="right"
+              content={"My Fridge"}
+            />
+          </MenuItem>
           <MenuItem onClick={() => navigateToPage("/profile")} >
             <p><CgProfile style={{ fontSize: iconSize }} data-tooltip-id="tooltip-profile" /></p>
             <Tooltip id="tooltip-profile"
@@ -82,5 +91,7 @@ const Menu = () => {
     </ThemeContext.Consumer>
   );
 }
+
+
 
 export default Menu;
