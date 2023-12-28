@@ -41,7 +41,9 @@ export const Ingredients = () => {
             try {
                 console.log('fetching data...');
                 const ingredients = await readFirebaseUserData(auth.currentUser.uid, "ingredients");
-                console.log(ingredients);
+                if (!ingredients || !ingredients.length) {
+                    return;
+                  }
                 setIngredients(ingredients[0].ingredients)
                 setLoading(false)
             } catch (error) {

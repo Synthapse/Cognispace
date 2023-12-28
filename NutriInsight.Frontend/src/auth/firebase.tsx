@@ -80,15 +80,11 @@ export const writeWaterStatsData = async (data: any) => {
 
     const collectionName = "drinkstats";
 
-    console.log('test')
-
-
     try {
         // Query to check if a document with the same userId and date  and already exists
         const querySnapshot = await getDocs(
             query(collection(db, collectionName),
                 where("userId", "==", userId),
-                where("date", "==", dates[0].date)
             )
         );
 
@@ -100,12 +96,11 @@ export const writeWaterStatsData = async (data: any) => {
             });
             console.log("Document written with ID: ", docRef.id);
         } else {
-            console.log("Duplicate document not added.");
+            console.log(querySnapshot.docs[0])
 
             const docRef = await updateDoc(doc(db, collectionName, querySnapshot.docs[0].id), {
                 userId: data.userId,
-                amount: data.amount,
-                date: dates[0].date
+                dates: dates,
             });
             console.log("Document updated with ID: ", docRef);
         }

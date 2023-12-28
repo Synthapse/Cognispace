@@ -240,6 +240,11 @@ const Search = ({ setRecipes, recipes }: ISearch) => {
     if (auth.currentUser) {
       try {
         const ingredients = await readFirebaseUserData(auth.currentUser.uid, "ingredients");
+
+        if (!ingredients || !ingredients.length) {
+          return;
+        }
+
         setUserIngredients(ingredients[0].ingredients)
         console.log(ingredients);
         setLoading(false)

@@ -17,6 +17,10 @@ const Recipe = () => {
         if (auth.currentUser) {
             try {
                 const ingredients = await readFirebaseUserData(auth.currentUser.uid, "ingredients");
+                if (!ingredients || !ingredients.length) {
+                    return;
+                }
+
                 setUserIngredients(ingredients[0].ingredients)
                 console.log(ingredients);
             } catch (error) {
@@ -39,7 +43,7 @@ const Recipe = () => {
                     <b>Ingredients:</b>
                     {recipe.ingredients.map((ingredient: string) => {
                         return (
-                            <li className ={userIngredients.includes(ingredient) ? 'green' : 'red'}>
+                            <li className={userIngredients.includes(ingredient) ? 'green' : 'red'}>
                                 {ingredient}
                             </li>
                         )
