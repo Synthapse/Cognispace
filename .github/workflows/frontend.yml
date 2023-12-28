@@ -1,4 +1,4 @@
-name: Cognispace Frontend
+name: NutriInsight Frontend
 
 on:
   push:
@@ -33,17 +33,17 @@ jobs:
 
       - uses: microsoft/variable-substitution@v1
         with:
-          files: 'Cognispace.Frontend/src/config.json'
+          files: 'NutriInsight.Frontend/src/config.json'
         env:
           apps.CognispaceAPI.url: ${{ env.API_URL }}
           apps.CognispaceAPI.isProduction: ${{ env.ENVIRONMENT }}
 
       - name: Read config.json from Cognispace.Front
-        run: 'cat Cognispace.Frontend/src/config.json'
+        run: 'cat NutriInsight.Frontend/src/config.json'
 
       - name: Build and deploy frontend to static GCP Cloud Storage
         run: |
-          cd ./Cognispace.Frontend/
+          cd ./NutriInsight.Frontend/
           npm install --force
           CI=false npm run build
           gsutil web set -m index.html -e index.html gs://${{ env.BUCKET }}
