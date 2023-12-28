@@ -22,47 +22,43 @@ export enum ChartType {
 
 export const DailyDrinksChart = ({ initialChartData, chartType }: IDailyDrinksChart) => {
 
-    const fillMissingDate = (data: IGraphWaterEvent[]) => {
-        const dateSet = new Set(data.map(({ name }) => name));
-
-        //@ts-ignore
-        const startDate = new Date(Math.min(...Array.from(dateSet).map(date => new Date(date))));
-        //@ts-ignore
-        const endDate = new Date(Math.max(...Array.from(dateSet).map(date => new Date(date))));
-
-        const result = [];
-
-        for (let currentDate = new Date(startDate); currentDate <= endDate; currentDate.setDate(currentDate.getDate() + 1)) {
-            const currentDateStr = currentDate.toISOString().split('T')[0];
-
-
-            const entryToUpdate = data.find((entry) => entry.name === currentDateStr);
-
-            if (entryToUpdate) {
-                // Check if the 'drinks' property is undefined
-                if (entryToUpdate.drinks === undefined) {
-                    entryToUpdate.drinks = [];
-                }
-            }
-
-            const drinks = dateSet.has(currentDateStr)
-                ? entryToUpdate
-                : [];
-
-            result.push({
-                name: currentDateStr,
-                //@ts-ignore
-                drinks: drinks?.drinks
-            });
-        }
-
-        return result;
-    };
 
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-    const initialDaysData = fillMissingDate(initialChartData).map((x: any) => ({
-        name: daysOfWeek[new Date(x.name).getDay()],
+
+    function generateEntriesBetween(data: any) {
+        const result = [];
+
+        for (let i = 0; i < data.length - 1; i++) {
+            const currentDate = new Date(data[i].name);
+            const nextDate = new Date(data[i + 1].name);
+
+            while (currentDate < nextDate) {
+                const currentDateStr = currentDate.toISOString().split('T')[0];
+
+                result.push({
+                    name: currentDateStr,
+                    coffee: 0,
+                    isotonic: 0,
+                    milk: 0,
+                    smoothie: 0,
+                    tea: 0,
+                    water: 0,
+                    yerbaMate: 0
+                });
+
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+        }
+
+        // Add the last date entry from the original data
+        result.push({ ...data[data.length - 1] });
+
+        return result;
+    }
+
+    const initialDaysData = generateEntriesBetween(initialChartData).map((x: any) => ({
+        name: x.name,
         water: x.drinks?.find((x: any) => x.type == DrinkTypes.Water)?.amount ?? 0 ?? 0 ?? 0,
         coffee: x.drinks?.find((x: any) => x.type == DrinkTypes.Coffee)?.amount ?? 0 ?? 0 ?? 0,
         tea: x.drinks?.find((x: any) => x.type == DrinkTypes.Tea)?.amount ?? 0 ?? 0 ?? 0,
@@ -113,7 +109,7 @@ export const DailyDrinksChart = ({ initialChartData, chartType }: IDailyDrinksCh
             }
             {chartType == ChartType.Monthly &&
                 <ResponsiveContainer minWidth="520px" width='100%' aspect={4.0 / 2.5}>
-                    <AreaChart width={620} height={320} data={initialDaysData}
+                    <AreaChart width={620} height={320} data={initialDaysData.slice(-30)}
                         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                         <Legend />
                         <defs>

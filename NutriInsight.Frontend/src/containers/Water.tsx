@@ -271,7 +271,7 @@ const Water = () => {
                         place="right"
                         content={WeeklyDrinksTooltip}
                     />
-                    <DailyDrinksChart initialChartData={chartData} chartType={ChartType.Monthly} /></MediumWidget>
+                    <DailyDrinksChart initialChartData={chartData} chartType={ChartType.Weekly} /></MediumWidget>
             </Dashboard>
         </Container>
     )

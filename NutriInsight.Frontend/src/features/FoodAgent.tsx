@@ -23,6 +23,7 @@ const MainContainer = styled.div`
     color: #4DAED0;
     padding: 0;
     margin: 32px 0 0px 0;
+    font-family: Gilroy-Regular;
   }
 
   p {
@@ -51,6 +52,30 @@ const MainImage = styled.img`
   width: 40%;
   height: 100vh;
   object-fit: cover;
+`
+
+const SignUp = styled.div`
+  display: flex;
+  margin-top: 24px;
+  flex-direction: row;
+  border: 1px solid #4DAED0;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-family: Gilroy-Medium;
+  transition: 0.2s;
+  &:hover {
+    cursor: pointer;
+    border: 1px solid #005F80;
+    transition: 0.2s;
+  }
+`
+
+const Logo = styled.img`
+  width: 85px;
+  height: 85px;
+  margin: 24px 0 0 0;
+  padding: 0;
 `
 
 
@@ -86,16 +111,16 @@ const FoodAgent = () => {
     <MainContainer>
 
       <PresentationContainer>
-        <img src={logo} className="App-logo" alt="logo" />
+        <Logo src={logo} className="App-logo" alt="logo" />
         <TextContainer>
           <h2>Welcome in NutriInsight!</h2>
           <h1>Savor the Symphony of Nature</h1>
-          <p>Elevate Your Tastebuds with Our Premium
+          <p>Elevate Your Tastebuds with our<br/>
             Natural Agriculture Food and Water</p>
           {!user ? (
-            <div className="sign-up" onClick={() => signInWithGoogle()} style={{ display: "flex" }}>
+            <SignUp onClick={() => signInWithGoogle()} style={{ display: "flex" }}>
               <FcGoogle style={{ fontSize: '18px' }} /><p>Sign up</p>
-            </div>
+            </SignUp>
           ) : (
             <div className="user-info" onClick={() => navigateToProfile()}>
               <div className="user-image">
