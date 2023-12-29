@@ -1,0 +1,15 @@
+# Use the official Cassandra image from Docker Hub
+FROM cassandra:latest
+
+# Create directories for Cassandra data
+RUN mkdir -p /Cassandra/node1 /Cassandra/node2
+
+# Copy the Cassandra configuration files
+COPY cassandra-node1-rackdc.properties /etc/cassandra/cassandra-rackdc.properties
+COPY cassandra-node2-rackdc.properties /etc/cassandra/cassandra-rackdc.properties
+
+# Expose the Cassandra port
+EXPOSE 9042
+
+# Set the entry point to start Cassandra
+CMD ["cassandra", "-f"]

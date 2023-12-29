@@ -8,9 +8,9 @@ on:
 
 env:
   PROJECT_ID: cognispace # TODO: update Google Cloud project id
-  GAR_LOCATION: europe-central2 # TODO: update Artifact Registry location
-  SERVICE: cognispace # TODO: update Cloud Run service name
-  REGION: europe-central2 # TODO: update Cloud Run service region
+  GAR_LOCATION: europe-central2
+  SERVICE: nutriInsightCassandra
+  REGION: europe-central2
 
 jobs:
   deploy:
@@ -35,5 +35,10 @@ jobs:
       - name: 'Use gcloud CLI'
         run: 'gcloud info'
 
-      - name: 'docker/compose:1.26.2'
-        args: ['up', '-d']
+      - name: Build and Push Container
+        run: |-
+          gcloud auth list
+          gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev
+          cd NutriInsight.API
+          docker build -t ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ github.sha }} -f dockerfile.cassandra
+          docker push ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ github.sha }}
