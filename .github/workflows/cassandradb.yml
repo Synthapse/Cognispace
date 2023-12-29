@@ -9,7 +9,7 @@ on:
 env:
   PROJECT_ID: cognispace # TODO: update Google Cloud project id
   GAR_LOCATION: europe-central2
-  SERVICE: nutriinsight-db-cassandra
+  SERVICE: nutriinsight-db
   REGION: europe-central2
 
 jobs:
