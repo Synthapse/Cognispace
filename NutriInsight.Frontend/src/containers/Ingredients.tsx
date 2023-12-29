@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import config from "../../config.json";
-import { auth, readFirebaseUserData, updateFirebaseUserData, writeIngredientsData } from "../../auth/firebase";
-import '../../style/ingredients.scss'
-import { Tag } from "../../components/Tag";
-import Menu from "../../components/Menu";
+import config from "../config.json";
+import { auth, readFirebaseUserData, updateFirebaseUserData, writeIngredientsData } from "../auth/firebase";
+import { Tag } from "../components/Tag";
+import Menu from "../components/Menu";
 import { CgSearch } from "react-icons/cg";
 import { CiCircleRemove } from "react-icons/ci";
+import { Container } from "./Water";
 
 
 interface IProduct {
@@ -43,7 +43,7 @@ export const Ingredients = () => {
                 const ingredients = await readFirebaseUserData(auth.currentUser.uid, "ingredients");
                 if (!ingredients || !ingredients.length) {
                     return;
-                  }
+                }
                 setIngredients(ingredients[0].ingredients)
                 setLoading(false)
             } catch (error) {
@@ -60,7 +60,7 @@ export const Ingredients = () => {
     const tabs = [
         {
             name: "New ingredients",
-            component: <NewIngredients fetchUserIngredients ={fetchUserIngredients} />
+            component: <NewIngredients fetchUserIngredients={fetchUserIngredients} />
         },
         {
             name: "Market products",
@@ -72,7 +72,7 @@ export const Ingredients = () => {
 
 
     return (
-        <div className="profile-container">
+        <Container>
             <Menu />
             <p>My ingredients:</p>
             <div className="ingredients">
@@ -86,24 +86,21 @@ export const Ingredients = () => {
                 })}
             </div>
 
-            <div className ="tabs">
-            {tabs.map((tab, index) => {
-                return (
-                    <div key ={index} className={activeTab == tab.name ? 'tab active' : 'tab'} onClick={() => setActiveTab(tab.name)}>
-                        <p>{tab.name}</p>
-                    </div>
-                )
-            }
-            )}
+            <div className="tabs">
+                {tabs.map((tab, index) => {
+                    return (
+                        <div key={index} className={activeTab == tab.name ? 'tab active' : 'tab'} onClick={() => setActiveTab(tab.name)}>
+                            <p>{tab.name}</p>
+                        </div>
+                    )
+                }
+                )}
             </div>
 
             {tabs.find(x => x.name === activeTab)?.component}
 
 
-
-
-
-        </div >
+        </Container>
     )
 }
 
@@ -112,7 +109,7 @@ interface INewIngredients {
     fetchUserIngredients: () => void;
 }
 
-const NewIngredients = ({fetchUserIngredients}: INewIngredients) => {
+const NewIngredients = ({ fetchUserIngredients }: INewIngredients) => {
 
     const [loading, setLoading] = useState<boolean>(false)
     const [allIngredients, setAllIngredients] = useState<IIngredient[]>([])
@@ -141,7 +138,7 @@ const NewIngredients = ({fetchUserIngredients}: INewIngredients) => {
             console.log(error);
         })
     }
-    
+
     const [checkedState, setCheckedState] = useState(
         new Array(allIngredients.length).fill(false)
     );
@@ -159,7 +156,7 @@ const NewIngredients = ({fetchUserIngredients}: INewIngredients) => {
         const selectedProducts = updatedCheckedState.map((item, index) => item === true ? allIngredients[index] : null
         ).filter(x => x !== null) as unknown as string[];
         setSelectedIngredients(selectedProducts)
-};
+    };
 
     const toggleSearch = () => {
         setTimeout(() => {

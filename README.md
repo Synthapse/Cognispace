@@ -1,4 +1,4 @@
-# Cognispace
+# Nutriinsight
 Project for autonomous agents. 
 
 Using: Llama-2 7B, LangChain, HuggingFace, FastAPI, Pydantic, Docker and more.
@@ -24,3 +24,8 @@ Including data from different sources of the internet, mainly:
 
 
 ___
+
+
+awk -F, 'BEGIN {OFS=","} { print "SET",$2, $3}' RAW_recipes.csv | sed 's/\"//g'
+
+

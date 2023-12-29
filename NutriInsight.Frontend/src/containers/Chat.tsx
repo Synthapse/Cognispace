@@ -3,7 +3,6 @@ import useFetch from "../hooks/useFetch";
 import { useLocation } from "react-router-dom";
 //@ts-ignore
 import Conversation from './conversations/MoodBasedAgent/conversation1.txt'
-import '../style/Chat.css';
 
 interface IMessage {
     role: string;

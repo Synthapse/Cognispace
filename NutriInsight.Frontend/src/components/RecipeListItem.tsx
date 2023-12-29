@@ -1,12 +1,12 @@
 import { BiTimer } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import { IRecipe } from "../features/Meal";
+import { IRecipe } from "../containers/Meal";
 import { BsBarChartSteps } from "react-icons/bs";
 import { PiBowlFood } from "react-icons/pi";
 import { Tag } from "./Tag";
-import { googleCalendarId } from "../features/Profile/Calendar";
-import { addEvent, addMinutesToDate, getSpecificHourDate } from "../features/utils";
-import { meals } from "../features/Mealplan";
+import { googleCalendarId } from "../containers/Calendar";
+import { addEvent, addMinutesToDate, getSpecificHourDate } from "../containers/utils";
+import { meals } from "../containers/Mealplan";
 
 const RecipeListItem = ({ recipe, meal }: { recipe: IRecipe, meal?: string }) => {
 

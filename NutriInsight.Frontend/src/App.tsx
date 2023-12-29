@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, HashRouter } from 'react-router-dom'; // Import BrowserRouter, Route, and Routes components
-import Mealplan from './features/Mealplan';
-import Meal from './features/Meal';
-import Chat from './features/Chat';
-import FoodAgent from './features/FoodAgent';
-import Recipe from './features/Recipe';
-import { Ingredients } from './features/Profile/Ingredients';
-import './style/main.scss';
+import Mealplan from './containers/Mealplan';
+import Meal from './containers/Meal';
+import Chat from './containers/Chat';
+import FoodAgent from './containers/FoodAgent';
+import Recipe from './containers/Recipe';
+import { Ingredients } from './containers/Ingredients';
 import { ImSun } from 'react-icons/im';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
-import { Calendar } from './features/Profile/Calendar';
+import { Calendar } from './containers/Calendar';
 import React from 'react';
 import { Hydration } from './containers/Hydration';
 import Water from './containers/Water';

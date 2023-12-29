@@ -2,8 +2,7 @@ import { useLocation } from "react-router-dom";
 import { IRecipe } from "./Meal";
 import { useEffect, useState } from "react";
 import { auth, readFirebaseUserData } from "../auth/firebase";
-
-import "../style/recipe.scss";
+import { Container } from "./Water";
 
 
 const Recipe = () => {
@@ -34,7 +33,7 @@ const Recipe = () => {
     }, [])
 
     return (
-        <>
+        <Container>
             {recipe &&
                 <>
                     <h1>{recipe.name}</h1>
@@ -59,7 +58,7 @@ const Recipe = () => {
                     }
                 </>
             }
-        </>
+        </Container>
     )
 }
 

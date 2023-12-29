@@ -22,38 +22,47 @@ export enum ChartType {
 
 export const DailyDrinksChart = ({ initialChartData, chartType }: IDailyDrinksChart) => {
 
-
-    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-
     function generateEntriesBetween(data: any) {
         const result = [];
-
+    
         for (let i = 0; i < data.length - 1; i++) {
             const currentDate = new Date(data[i].name);
             const nextDate = new Date(data[i + 1].name);
-
+    
             while (currentDate < nextDate) {
                 const currentDateStr = currentDate.toISOString().split('T')[0];
-
-                result.push({
-                    name: currentDateStr,
-                    coffee: 0,
-                    isotonic: 0,
-                    milk: 0,
-                    smoothie: 0,
-                    tea: 0,
-                    water: 0,
-                    yerbaMate: 0
+    
+                // Check if the current date has data in the original data
+                const matchingOriginalEntry = data.find((entry: any) => {
+                    const entryDateStr = new Date(entry.name).toISOString().split('T')[0];
+                    return entryDateStr === currentDateStr;
                 });
-
+    
+                if (matchingOriginalEntry) {
+                    result.push({ ...matchingOriginalEntry });
+                } else {
+                    result.push({
+                        name: currentDateStr,
+                        coffee: 0,
+                        isotonic: 0,
+                        milk: 0,
+                        smoothie: 0,
+                        tea: 0,
+                        water: 0,
+                        yerbaMate: 0
+                    });
+                }
+    
                 currentDate.setDate(currentDate.getDate() + 1);
             }
         }
-
+    
         // Add the last date entry from the original data
-        result.push({ ...data[data.length - 1] });
-
+        const lastDateEntry = data[data.length - 1];
+        if (lastDateEntry) {
+            result.push({ ...lastDateEntry });
+        }
+    
         return result;
     }
 
@@ -67,6 +76,8 @@ export const DailyDrinksChart = ({ initialChartData, chartType }: IDailyDrinksCh
         isotonic: x.drinks?.find((x: any) => x.type == DrinkTypes.Isotonic)?.amount ?? 0 ?? 0 ?? 0,
         yerbaMate: x.drinks?.find((x: any) => x.type == DrinkTypes.YerbaMate)?.amount ?? 0 ?? 0 ?? 0
     }))
+
+    console.log(initialDaysData)
 
     return (
         <div>

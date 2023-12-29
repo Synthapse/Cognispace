@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import '../../style/ingredients.scss'
 import { gapi } from "gapi-script";
-import Menu from "../../components/Menu";
-import { GOOGLE_ACCESS_TOKEN, addEvent, saveToLocalStorage } from "../utils";
+import Menu from "../components/Menu";
+import { GOOGLE_ACCESS_TOKEN, addEvent, saveToLocalStorage } from "./utils";
 
 interface IProduct {
     name: string;
