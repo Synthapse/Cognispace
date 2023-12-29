@@ -25,6 +25,11 @@ Including data from different sources of the internet, mainly:
 
 ___
 
+Redis
+
+brew install redis
+
+
 
 awk -F, 'BEGIN {OFS=","} { print "SET",$2, $3}' RAW_recipes.csv | sed 's/\"//g'
 
