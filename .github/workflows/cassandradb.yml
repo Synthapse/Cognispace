@@ -1,0 +1,39 @@
+name: NutriInsight-DB-Cassandra
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: cognispace # TODO: update Google Cloud project id
+  GAR_LOCATION: europe-central2 # TODO: update Artifact Registry location
+  SERVICE: cognispace # TODO: update Cloud Run service name
+  REGION: europe-central2 # TODO: update Cloud Run service region
+
+jobs:
+  deploy:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+          
+      - name: Google Auth
+        id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        
+      - name: 'Use gcloud CLI'
+        run: 'gcloud info'
+
+      - name: 'docker/compose:1.26.2'
+        args: ['up', '-d']

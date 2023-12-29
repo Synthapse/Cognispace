@@ -7,6 +7,7 @@ import Menu from "../components/Menu";
 import { CgSearch } from "react-icons/cg";
 import { CiCircleRemove } from "react-icons/ci";
 import { Container } from "./Water";
+import styled from "styled-components";
 
 
 interface IProduct {
@@ -19,6 +20,47 @@ interface IIngredient {
     title: string[];
     userId: string;
 }
+
+const IngredientsContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+`
+
+const Ingredient = styled.div`
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 5px;
+    width: 100%;
+    height: 30px;
+`
+
+const NewIngredientContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    display: flex-start;
+`
+
+const NewIngredientSelect = styled.div`
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 5px;
+    width: 25%;
+    height: 30px;
+    border: 1px solid #ccc;
+    `
 
 export const Ingredients = () => {
 
@@ -62,10 +104,10 @@ export const Ingredients = () => {
             name: "New ingredients",
             component: <NewIngredients fetchUserIngredients={fetchUserIngredients} />
         },
-        {
-            name: "Market products",
-            component: <MarketProducts />
-        }
+        // {
+        //     name: "Market products",
+        //     component: <MarketProducts />
+        // }
     ]
 
     const [activeTab, setActiveTab] = useState<string>(tabs[0].name)
@@ -75,22 +117,21 @@ export const Ingredients = () => {
         <Container>
             <Menu />
             <p>My ingredients:</p>
-            <div className="ingredients">
+            <IngredientsContainer>
                 {ingredients?.map((ingredient: string) => {
                     return (
-                        <div className="tags">
+                        <Ingredient>
                             <Tag text={ingredient} />
                             <CiCircleRemove onClick={() => removeIngredient(ingredient)} />
-                        </div>
+                        </Ingredient>
                     )
                 })}
-            </div>
-
+            </IngredientsContainer>
             <div className="tabs">
                 {tabs.map((tab, index) => {
                     return (
                         <div key={index} className={activeTab == tab.name ? 'tab active' : 'tab'} onClick={() => setActiveTab(tab.name)}>
-                            <p>{tab.name}</p>
+                            <h1>{tab.name}</h1>
                         </div>
                     )
                 }
@@ -217,28 +258,27 @@ const NewIngredients = ({ fetchUserIngredients }: INewIngredients) => {
                 </button>
                 {searchIngredientsLoading
                     ? <p>Loading...</p> :
-                    <>
+                    <NewIngredientContainer>
                         {allIngredients.map((ingredient: any, index: number) => {
                             return (
-                                <div className="tags">
-                                    <div className="product-checkbox">
-                                        <input
-                                            type="checkbox"
-                                            id={`custom-checkbox-${index}`}
-                                            name={ingredient}
-                                            value={ingredient}
-                                            checked={checkedState[index]}
-                                            onChange={() => handleOnChange(index)}
-                                        />
-                                        <div className="product-checkbox-label">
-                                            <label htmlFor={`custom-checkbox-${index}`}>{ingredient}</label>
-                                        </div>
+                                <NewIngredientSelect>
+
+                                    <input
+                                        type="checkbox"
+                                        id={`custom-checkbox-${index}`}
+                                        name={ingredient}
+                                        value={ingredient}
+                                        checked={checkedState[index]}
+                                        onChange={() => handleOnChange(index)}
+                                    />
+                                    <div className="product-checkbox-label">
+                                        <label htmlFor={`custom-checkbox-${index}`}>{ingredient}</label>
                                     </div>
-                                </div>
+                                </NewIngredientSelect>
                             )
                         }
                         )}
-                    </>
+                    </NewIngredientContainer>
                 }
             </>
         </div>

@@ -23,3 +23,14 @@ ____
 DB: Cassandra:
 
 https://blog.adnansiddiqi.me/getting-started-with-apache-cassandra-and-python/
+
+View status of container:
+
+-- docker exec -it cas1 nodetool statu
+
+
+Connect to 2-nd node:
+
+-- docker exec -it cas2  cqlsh
+
+(it is similar to MySQL shell.)
