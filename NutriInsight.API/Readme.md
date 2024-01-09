@@ -28,6 +28,8 @@ View status of container:
 
 -- docker exec -it cas1 nodetool statu
 
+-- docker inspect {name of container}
+-- docker inspect <containerNameOrId> | grep '"IPAddress"' | head -n 1
 
 Connect to 2-nd node:
 
